@@ -1,17 +1,198 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+    <div class="favorites-header">
+      <div>
+        <span class="section-label">Smart Travel RD</span>
+        <h1>Favoritos</h1>
+        <p>Tus lugares guardados</p>
+      </div>
+
+      <div class="favorites-counter">
+        <ion-icon name="heart"></ion-icon>
+        <span>{{ favorites.length }}</span>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <main class="favorites-container">
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+    <!-- Resumen -->
+    <section class="summary-card">
+      <div class="summary-icon">
+        <ion-icon name="bookmark-outline"></ion-icon>
+      </div>
+
+      <div>
+        <span>Mi colección</span>
+        <strong>
+          {{ favorites.length }}
+          {{ favorites.length === 1 ? 'lugar guardado' : 'lugares guardados' }}
+        </strong>
+      </div>
+
+      <div class="summary-decoration" aria-hidden="true">✈️</div>
+    </section>
+
+    <!-- Buscador -->
+    <section class="search-section">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+
+        <input
+          type="search"
+          [(ngModel)]="searchTerm"
+          placeholder="Buscar en favoritos"
+          aria-label="Buscar en favoritos"
+        />
+
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          aria-label="Limpiar búsqueda"
+          (click)="clearSearch()"
+        >
+          <ion-icon name="close-circle"></ion-icon>
+        </button>
+      </div>
+    </section>
+
+    <!-- Encabezado de lista -->
+    <section class="list-heading">
+      <div>
+        <span class="section-eyebrow">Destinos guardados</span>
+        <h2>Mis lugares</h2>
+      </div>
+
+      <span>{{ filteredFavorites.length }} resultados</span>
+    </section>
+
+    <!-- Lista de favoritos -->
+    <section
+      *ngIf="filteredFavorites.length > 0; else emptyState"
+      class="favorites-list"
+    >
+      <article
+        *ngFor="let place of filteredFavorites"
+        class="favorite-card"
+      >
+        <div
+          class="place-visual"
+          [ngClass]="place.colorClass"
+        >
+          <span class="category-badge">
+            {{ place.category }}
+          </span>
+
+          <span class="place-symbol" aria-hidden="true">
+            {{ place.symbol }}
+          </span>
+
+          <span class="rating-badge">
+            ⭐ {{ place.rating }}
+          </span>
+        </div>
+
+        <div class="place-information">
+          <div class="place-title-row">
+            <div>
+              <h3>{{ place.name }}</h3>
+
+              <p>
+                <ion-icon name="location-outline"></ion-icon>
+                {{ place.location }}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="remove-button"
+              [attr.aria-label]="'Eliminar ' + place.name + ' de favoritos'"
+              (click)="removeFavorite(place.id)"
+            >
+              <ion-icon name="heart"></ion-icon>
+            </button>
+          </div>
+
+          <div class="place-meta">
+            <span>
+              <ion-icon name="navigate-outline"></ion-icon>
+              {{ place.distance }}
+            </span>
+
+            <span>
+              <ion-icon name="pricetag-outline"></ion-icon>
+              {{ place.category }}
+            </span>
+          </div>
+
+          <div class="card-actions">
+            <button type="button" class="secondary-button">
+              <ion-icon name="create-outline"></ion-icon>
+              Editar
+            </button>
+
+            <a href="/tabs/tab2" class="primary-button">
+              <ion-icon name="map-outline"></ion-icon>
+              Ver en mapa
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- Estado vacío -->
+    <ng-template #emptyState>
+      <section class="empty-state">
+        <div class="empty-icon">
+          <ion-icon name="heart-outline"></ion-icon>
+        </div>
+
+        <h2>
+          {{ searchTerm ? 'No encontramos resultados' : 'Aún no tienes favoritos' }}
+        </h2>
+
+        <p *ngIf="searchTerm">
+          Prueba con otro nombre, ubicación o categoría.
+        </p>
+
+        <p *ngIf="!searchTerm">
+          Explora destinos y guarda los lugares que quieras visitar.
+        </p>
+
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          class="empty-button"
+          (click)="clearSearch()"
+        >
+          Limpiar búsqueda
+        </button>
+
+        <a
+          *ngIf="!searchTerm"
+          href="/tabs/tab2"
+          class="empty-button"
+        >
+          Explorar destinos
+        </a>
+      </section>
+    </ng-template>
+
+    <!-- Información -->
+    <section class="storage-note">
+      <ion-icon name="cloud-offline-outline"></ion-icon>
+
+      <div>
+        <strong>Disponible sin conexión</strong>
+
+        <p>
+          Tus lugares favoritos se almacenarán localmente para que puedas
+          consultarlos incluso cuando no tengas Internet.
+        </p>
+      </div>
+    </section>
+
+  </main>
 </ion-content>
