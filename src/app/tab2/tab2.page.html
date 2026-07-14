@@ -8,7 +8,11 @@
       </div>
 
       <div class="location-badge">
-        <ion-icon name="location-outline"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="location-outline"
+        ></ion-icon>
+
         <span>Santo Domingo</span>
       </div>
     </div>
@@ -21,16 +25,40 @@
     <!-- Buscador -->
     <section class="search-section">
       <div class="search-box">
-        <ion-icon name="search-outline"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="search-outline"
+        ></ion-icon>
 
         <input
           type="search"
-          placeholder="Buscar playas, museos o restaurantes"
-          aria-label="Buscar lugares"
+          [(ngModel)]="searchTerm"
+          placeholder="Buscar lugares, ciudades o categorías"
+          aria-label="Buscar lugares turísticos"
+          (input)="onSearchChange()"
         />
 
-        <button type="button" aria-label="Aplicar filtros">
-          <ion-icon name="options-outline"></ion-icon>
+        <button
+          *ngIf="searchTerm"
+          type="button"
+          aria-label="Limpiar búsqueda"
+          (click)="clearSearch()"
+        >
+          <ion-icon
+            aria-hidden="true"
+            name="close-circle"
+          ></ion-icon>
+        </button>
+
+        <button
+          *ngIf="!searchTerm"
+          type="button"
+          aria-label="Filtros por categoría"
+        >
+          <ion-icon
+            aria-hidden="true"
+            name="options-outline"
+          ></ion-icon>
         </button>
       </div>
     </section>
@@ -38,207 +66,342 @@
     <!-- Categorías -->
     <section class="categories-section">
       <div class="category-list">
+        <button
+          *ngFor="let category of categories"
+          type="button"
+          class="category-button"
+          [class.active]="
+            selectedCategory === category.value
+          "
+          (click)="selectCategory(category.value)"
+        >
+          <span aria-hidden="true">
+            {{ category.icon }}
+          </span>
 
-        <button type="button" class="category-button active">
-          <span>🌎</span>
-          Todos
+          {{ category.label }}
         </button>
-
-        <button type="button" class="category-button">
-          <span>🏖️</span>
-          Playas
-        </button>
-
-        <button type="button" class="category-button">
-          <span>🏛️</span>
-          Cultura
-        </button>
-
-        <button type="button" class="category-button">
-          <span>🍽️</span>
-          Restaurantes
-        </button>
-
-        <button type="button" class="category-button">
-          <span>🏨</span>
-          Hoteles
-        </button>
-
       </div>
     </section>
 
-    <!-- Mapa real con Leaflet -->
-<section class="map-card">
-  <div class="map-wrapper">
-    <div
-      id="travel-map"
-      class="leaflet-map"
-      aria-label="Mapa interactivo de lugares turísticos"
-    ></div>
+    <!-- Mapa -->
+    <section class="map-card">
+      <div class="map-wrapper">
+        <div
+          id="travel-map"
+          class="leaflet-map"
+          role="application"
+          aria-label="Mapa interactivo de lugares turísticos"
+        ></div>
 
-    <button
-      type="button"
-      class="location-button"
-      [disabled]="isLocating"
-      aria-label="Obtener mi ubicación"
-      (click)="centerOnCurrentLocation()"
-    >
-      <ion-icon
-        [name]="isLocating ? 'hourglass-outline' : 'locate-outline'"
-      ></ion-icon>
-    </button>
-  </div>
-
-  <div
-    class="map-status"
-    [class.location-error]="locationError"
-  >
-    <div>
-      <span class="status-dot"></span>
-
-      <div>
-        <strong>
-          @if (isLocating) {
-            Buscando ubicación
-          } @else if (currentLocation) {
-            Ubicación encontrada
-          } @else if (locationError) {
-            Ubicación no disponible
-          } @else {
-            Mapa disponible
-          }
-        </strong>
-
-        <small>
-          @if (isLocating) {
-            Espera mientras consultamos el GPS
-          } @else if (currentLocation) {
-            {{ currentLocation.latitude.toFixed(5) }},
-            {{ currentLocation.longitude.toFixed(5) }}
-          } @else if (locationError) {
-            {{ locationError }}
-          } @else {
-            Pulsa el botón para mostrar tu posición
-          }
-        </small>
+        <button
+          type="button"
+          class="location-button"
+          [disabled]="isLocating"
+          aria-label="Centrar el mapa en mi ubicación"
+          (click)="centerOnCurrentLocation()"
+        >
+          <ion-icon
+            aria-hidden="true"
+            [name]="
+              isLocating
+                ? 'hourglass-outline'
+                : 'locate-outline'
+            "
+          ></ion-icon>
+        </button>
       </div>
-    </div>
 
-    <button
-      type="button"
-      [disabled]="isLocating"
-      (click)="locateUser()"
-    >
-      {{ currentLocation ? 'Actualizar' : 'Ubicarme' }}
-    </button>
-  </div>
-</section>
+      <div
+        class="map-status"
+        [class.location-error]="locationError"
+      >
+        <div class="map-status-information">
+          <span class="status-dot"></span>
 
-    <!-- Lugares cercanos -->
+          <div>
+            <strong>
+              @if (isLocating) {
+                Buscando ubicación
+              } @else if (currentLocation) {
+                Ubicación encontrada
+              } @else if (locationError) {
+                Ubicación no disponible
+              } @else {
+                Mapa disponible
+              }
+            </strong>
+
+            <small>
+              @if (isLocating) {
+                Espera mientras consultamos el GPS
+              } @else if (currentLocation) {
+                {{ currentLocation.latitude.toFixed(5) }},
+                {{ currentLocation.longitude.toFixed(5) }}
+              } @else if (locationError) {
+                {{ locationError }}
+              } @else {
+                Pulsa el botón para mostrar tu posición
+              }
+            </small>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          [disabled]="isLocating"
+          (click)="locateUser()"
+        >
+          {{ currentLocation ? 'Actualizar' : 'Ubicarme' }}
+        </button>
+      </div>
+    </section>
+
+    <!-- Lugares -->
     <section class="places-section">
       <div class="section-heading">
         <div>
-          <span class="section-eyebrow">Recomendaciones</span>
-          <h2>Lugares cercanos</h2>
+          <span class="section-eyebrow">
+            Recomendaciones
+          </span>
+
+          <h2>Lugares turísticos</h2>
         </div>
 
-        <button type="button">Ver todos</button>
+        <span class="results-counter">
+          {{ filteredPlaces.length }}
+          {{
+            filteredPlaces.length === 1
+              ? 'lugar'
+              : 'lugares'
+          }}
+        </span>
       </div>
 
-      <div class="places-list">
+      @if (isLoadingPlaces) {
+        <section class="skeleton-grid">
+          <article
+            *ngFor="let item of [1, 2, 3]"
+            class="skeleton-card"
+          >
+            <div class="skeleton-image"></div>
+            <div class="skeleton-line large"></div>
+            <div class="skeleton-line medium"></div>
+            <div class="skeleton-line small"></div>
+          </article>
+        </section>
+      }
 
-        <article class="place-card">
-          <div class="place-image colonial-zone">
-            <span class="place-category">Cultura</span>
-            <span class="place-symbol">🏛️</span>
+      @if (!isLoadingPlaces && placesError) {
+        <section class="places-error">
+          <div class="error-icon">
+            <ion-icon
+              aria-hidden="true"
+              name="alert-circle-outline"
+            ></ion-icon>
           </div>
 
-          <div class="place-content">
-            <div class="place-title">
-              <div>
-                <h3>Zona Colonial</h3>
-                <p>Santo Domingo</p>
+          <div>
+            <strong>No se pudieron cargar los lugares</strong>
+            <p>{{ placesError }}</p>
+          </div>
+        </section>
+      }
+
+      @if (
+        !isLoadingPlaces &&
+        !placesError &&
+        filteredPlaces.length > 0
+      ) {
+        <div class="places-list">
+          <article
+            *ngFor="let place of filteredPlaces"
+            class="place-card"
+          >
+            <button
+              type="button"
+              class="place-visual"
+              [class.category-beach]="
+                place.category === 'Playa'
+              "
+              [class.category-nature]="
+                place.category === 'Naturaleza'
+              "
+              [class.category-culture]="
+                place.category === 'Cultura'
+              "
+              [class.category-history]="
+                place.category === 'Historia'
+              "
+              [class.category-walk]="
+                place.category === 'Paseo'
+              "
+              [attr.aria-label]="
+                'Mostrar ' + place.name + ' en el mapa'
+              "
+              (click)="centerOnPlace(place)"
+            >
+              <img
+                [src]="imagePath(place)"
+                [alt]="place.name"
+                loading="lazy"
+                (error)="handleImageError($event)"
+              />
+
+              <span class="image-overlay"></span>
+
+              <span class="place-category">
+                {{ place.category }}
+              </span>
+
+              <span
+                class="fallback-symbol"
+                aria-hidden="true"
+              >
+                @switch (place.category) {
+                  @case ('Playa') {
+                    🏖️
+                  }
+                  @case ('Naturaleza') {
+                    🌳
+                  }
+                  @case ('Cultura') {
+                    🏛️
+                  }
+                  @case ('Historia') {
+                    🏰
+                  }
+                  @case ('Paseo') {
+                    🚶
+                  }
+                  @default {
+                    📍
+                  }
+                }
+              </span>
+
+              <span class="rating-badge">
+                ⭐ {{ place.rating }}
+              </span>
+            </button>
+
+            <div class="place-content">
+              <div class="place-title">
+                <div>
+                  <h3>{{ place.name }}</h3>
+
+                  <p>
+                    <ion-icon
+                      aria-hidden="true"
+                      name="location-outline"
+                    ></ion-icon>
+
+                    {{ place.city }}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  class="favorite-button"
+                  [class.saved]="isFavorite(place.id)"
+                  [disabled]="
+                    isFavoriteActionInProgress(place.id)
+                  "
+                  [attr.aria-label]="
+                    isFavorite(place.id)
+                      ? 'Quitar ' + place.name + ' de favoritos'
+                      : 'Guardar ' + place.name + ' como favorito'
+                  "
+                  (click)="toggleFavorite(place)"
+                >
+                  <ion-icon
+                    aria-hidden="true"
+                    [name]="
+                      isFavoriteActionInProgress(place.id)
+                        ? 'hourglass-outline'
+                        : isFavorite(place.id)
+                          ? 'heart'
+                          : 'heart-outline'
+                    "
+                  ></ion-icon>
+                </button>
+              </div>
+
+              <p class="place-description">
+                {{ place.description }}
+              </p>
+
+              <div class="place-meta">
+                <span>
+                  <ion-icon
+                    aria-hidden="true"
+                    name="star-outline"
+                  ></ion-icon>
+
+                  {{ place.rating }}
+                </span>
+
+                <span>
+                  <ion-icon
+                    aria-hidden="true"
+                    name="navigate-outline"
+                  ></ion-icon>
+
+                  {{ place.distance }}
+                </span>
               </div>
 
               <button
                 type="button"
-                class="favorite-button"
-                aria-label="Guardar Zona Colonial"
+                class="map-place-button"
+                (click)="centerOnPlace(place)"
               >
-                <ion-icon name="heart-outline"></ion-icon>
+                <ion-icon
+                  aria-hidden="true"
+                  name="map-outline"
+                ></ion-icon>
+
+                Ver en el mapa
               </button>
             </div>
+          </article>
+        </div>
+      }
 
-            <div class="place-meta">
-              <span>⭐ 4.8</span>
-              <span>📍 2.4 km</span>
-              <span>🕐 Abierto</span>
-            </div>
-          </div>
-        </article>
+      @if (
+        !isLoadingPlaces &&
+        !placesError &&
+        filteredPlaces.length === 0
+      ) {
+        <section class="empty-places">
+          <ion-icon
+            aria-hidden="true"
+            name="search-outline"
+          ></ion-icon>
 
-        <article class="place-card">
-          <div class="place-image boca-chica">
-            <span class="place-category">Playa</span>
-            <span class="place-symbol">🏖️</span>
-          </div>
+          <h3>No encontramos lugares</h3>
 
-          <div class="place-content">
-            <div class="place-title">
-              <div>
-                <h3>Playa Boca Chica</h3>
-                <p>Santo Domingo</p>
-              </div>
+          <p>
+            Cambia la búsqueda o selecciona otra categoría.
+          </p>
 
-              <button
-                type="button"
-                class="favorite-button"
-                aria-label="Guardar Playa Boca Chica"
-              >
-                <ion-icon name="heart-outline"></ion-icon>
-              </button>
-            </div>
-
-            <div class="place-meta">
-              <span>⭐ 4.6</span>
-              <span>📍 30 km</span>
-              <span>☀️ 30 °C</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="place-card">
-          <div class="place-image botanical-garden">
-            <span class="place-category">Naturaleza</span>
-            <span class="place-symbol">🌳</span>
-          </div>
-
-          <div class="place-content">
-            <div class="place-title">
-              <div>
-                <h3>Jardín Botánico</h3>
-                <p>Distrito Nacional</p>
-              </div>
-
-              <button
-                type="button"
-                class="favorite-button"
-                aria-label="Guardar Jardín Botánico"
-              >
-                <ion-icon name="heart-outline"></ion-icon>
-              </button>
-            </div>
-
-            <div class="place-meta">
-              <span>⭐ 4.7</span>
-              <span>📍 6.8 km</span>
-              <span>🌿 Natural</span>
-            </div>
-          </div>
-        </article>
-
-      </div>
+          <button
+            type="button"
+            (click)="clearSearch(); selectCategory('Todos')"
+          >
+            Mostrar todos
+          </button>
+        </section>
+      }
     </section>
 
   </main>
+
+  <ion-toast
+    [isOpen]="toastOpen"
+    [message]="toastMessage"
+    [duration]="2200"
+    position="bottom"
+    (didDismiss)="toastOpen = false"
+  ></ion-toast>
 </ion-content>

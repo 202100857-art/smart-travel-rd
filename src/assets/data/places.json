@@ -1,0 +1,80 @@
+[
+  {
+    "id": 1,
+    "name": "Zona Colonial",
+    "category": "Cultura",
+    "city": "Santo Domingo",
+    "latitude": 18.4734,
+    "longitude": -69.8843,
+    "rating": 4.8,
+    "distance": "2.4 km",
+    "image": "zona-colonial.jpg",
+    "description": "Zona histórica de Santo Domingo con monumentos, plazas y arquitectura colonial.",
+    "favorite": false
+  },
+  {
+    "id": 2,
+    "name": "Jardín Botánico Nacional",
+    "category": "Naturaleza",
+    "city": "Santo Domingo",
+    "latitude": 18.4931,
+    "longitude": -69.9592,
+    "rating": 4.7,
+    "distance": "6.8 km",
+    "image": "jardin-botanico.jpg",
+    "description": "Espacio natural dedicado a la conservación y exhibición de la flora dominicana.",
+    "favorite": false
+  },
+  {
+    "id": 3,
+    "name": "Malecón de Santo Domingo",
+    "category": "Paseo",
+    "city": "Santo Domingo",
+    "latitude": 18.4625,
+    "longitude": -69.9108,
+    "rating": 4.6,
+    "distance": "3.1 km",
+    "image": "malecon.jpg",
+    "description": "Avenida costera ideal para caminar, contemplar el mar y conocer espacios recreativos.",
+    "favorite": false
+  },
+  {
+    "id": 4,
+    "name": "Playa Boca Chica",
+    "category": "Playa",
+    "city": "Boca Chica",
+    "latitude": 18.4511,
+    "longitude": -69.6069,
+    "rating": 4.7,
+    "distance": "30 km",
+    "image": "boca-chica.jpg",
+    "description": "Playa de aguas poco profundas ubicada cerca de Santo Domingo.",
+    "favorite": false
+  },
+  {
+    "id": 5,
+    "name": "Faro a Colón",
+    "category": "Historia",
+    "city": "Santo Domingo Este",
+    "latitude": 18.4804,
+    "longitude": -69.8686,
+    "rating": 4.5,
+    "distance": "5.7 km",
+    "image": "faro-colon.jpg",
+    "description": "Monumento y museo dedicado a la historia del encuentro entre Europa y América.",
+    "favorite": false
+  },
+  {
+    "id": 6,
+    "name": "Parque Nacional Los Tres Ojos",
+    "category": "Naturaleza",
+    "city": "Santo Domingo Este",
+    "latitude": 18.4796,
+    "longitude": -69.8518,
+    "rating": 4.8,
+    "distance": "6 km",
+    "image": "tres-ojos.jpg",
+    "description": "Sistema de cavernas y lagos subterráneos rodeado de vegetación tropical.",
+    "favorite": false
+  }
+]

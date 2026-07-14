@@ -73,6 +73,8 @@ ion-content {
   padding: 8px 18px 34px;
 }
 
+/* Resumen */
+
 .summary-card {
   position: relative;
   display: flex;
@@ -82,7 +84,12 @@ ion-content {
   overflow: hidden;
   padding: 17px;
   border-radius: 22px;
-  background: linear-gradient(135deg, #0d47a1, #1565c0 55%, #26c6da);
+  background: linear-gradient(
+    135deg,
+    #0d47a1,
+    #1565c0 55%,
+    #26c6da
+  );
   color: #ffffff;
   box-shadow: 0 13px 28px rgba(21, 101, 192, 0.22);
 }
@@ -96,7 +103,6 @@ ion-content {
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.15);
   place-items: center;
-  backdrop-filter: blur(8px);
 }
 
 .summary-icon ion-icon {
@@ -128,6 +134,8 @@ ion-content {
   opacity: 0.2;
   transform: rotate(-14deg);
 }
+
+/* Buscador */
 
 .search-section {
   margin-top: 19px;
@@ -185,6 +193,8 @@ ion-content {
   font-size: 20px;
 }
 
+/* Encabezado de lista */
+
 .list-heading {
   display: flex;
   align-items: flex-end;
@@ -208,12 +218,31 @@ ion-content {
   font-weight: 800;
 }
 
-.list-heading > span {
-  flex: 0 0 auto;
+.heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.heading-actions > span {
   color: var(--smart-travel-text-secondary);
   font-size: 10px;
   font-weight: 650;
 }
+
+.clear-all-button {
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 9px;
+  background: rgba(229, 57, 53, 0.09);
+  color: var(--ion-color-danger);
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+/* Tarjetas */
 
 .favorites-list {
   display: grid;
@@ -233,6 +262,7 @@ ion-content {
   display: grid;
   min-height: 150px;
   overflow: hidden;
+  background: linear-gradient(135deg, #90caf9, #1565c0);
   place-items: center;
 }
 
@@ -248,15 +278,44 @@ ion-content {
 }
 
 .punta-cana {
-  background: linear-gradient(135deg, #80deea, #26c6da 48%, #1565c0);
+  background: linear-gradient(
+    135deg,
+    #80deea,
+    #26c6da 48%,
+    #1565c0
+  );
 }
 
 .colonial-zone {
-  background: linear-gradient(135deg, #ffcc80, #ff8a65);
+  background: linear-gradient(
+    135deg,
+    #ffcc80,
+    #ff8a65
+  );
 }
 
 .botanical-garden {
-  background: linear-gradient(135deg, #a5d6a7, #43a047);
+  background: linear-gradient(
+    135deg,
+    #a5d6a7,
+    #43a047
+  );
+}
+
+.walking-place {
+  background: linear-gradient(
+    135deg,
+    #ce93d8,
+    #8e24aa
+  );
+}
+
+.default-place {
+  background: linear-gradient(
+    135deg,
+    #90caf9,
+    #1565c0
+  );
 }
 
 .category-badge,
@@ -265,7 +324,7 @@ ion-content {
   z-index: 2;
   padding: 6px 9px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.91);
+  background: rgba(255, 255, 255, 0.92);
   color: #455a64;
   font-size: 9px;
   font-weight: 750;
@@ -285,7 +344,9 @@ ion-content {
   position: relative;
   z-index: 1;
   font-size: 60px;
-  filter: drop-shadow(0 10px 11px rgba(38, 50, 56, 0.18));
+  filter: drop-shadow(
+    0 10px 11px rgba(38, 50, 56, 0.18)
+  );
 }
 
 .place-information {
@@ -337,6 +398,11 @@ ion-content {
   font-size: 20px;
 }
 
+.remove-button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
 .place-meta {
   display: flex;
   flex-wrap: wrap;
@@ -381,7 +447,6 @@ ion-content {
   font-size: 10px;
   font-weight: 700;
   text-decoration: none;
-  cursor: pointer;
 }
 
 .secondary-button {
@@ -390,22 +455,26 @@ ion-content {
   color: var(--smart-travel-text-secondary);
 }
 
+.secondary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .primary-button {
   border: 1px solid var(--ion-color-primary);
   background: var(--ion-color-primary);
   color: #ffffff;
 }
 
-.card-actions ion-icon {
-  font-size: 16px;
-}
+/* Estado vacío */
 
 .empty-state {
   padding: 42px 23px;
   border: 1px dashed #cfd8dc;
   border-radius: 22px;
-  background: rgba(255, 255, 255, 0.68);
+  background: var(--smart-travel-surface);
   text-align: center;
+  box-shadow: 0 7px 20px rgba(38, 50, 56, 0.04);
 }
 
 .empty-icon {
@@ -453,6 +522,8 @@ ion-content {
   text-decoration: none;
   cursor: pointer;
 }
+
+/* Nota de almacenamiento */
 
 .storage-note {
   display: flex;

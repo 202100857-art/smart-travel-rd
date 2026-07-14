@@ -1,30 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+
 import {
   IonContent,
   IonHeader,
   IonIcon,
-   IonTitle,
-  IonToolbar, } from '@ionic/angular/standalone';
+  IonToolbar,
+} from '@ionic/angular/standalone';
 
-interface FavoritePlace {
-  id: number;
-  name: string;
-  location: string;
-  category: string;
-  rating: number;
-  distance: string;
-  symbol: string;
-  colorClass: string;
-}
+import { Place } from '../models/place.model';
+import { FavoritesService } from '../services/favorites';
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
   standalone: true,
-  imports: [IonTitle, 
+  imports: [
     CommonModule,
     FormsModule,
     IonContent,
@@ -35,59 +28,122 @@ interface FavoritePlace {
 })
 export class Tab3Page {
   searchTerm = '';
+  removingFavoriteId: number | null = null;
 
-  favorites: FavoritePlace[] = [
-    {
-      id: 1,
-      name: 'Punta Cana',
-      location: 'La Altagracia',
-      category: 'Playa',
-      rating: 4.9,
-      distance: '198 km',
-      symbol: '🌴',
-      colorClass: 'punta-cana',
-    },
-    {
-      id: 2,
-      name: 'Zona Colonial',
-      location: 'Santo Domingo',
-      category: 'Cultura',
-      rating: 4.8,
-      distance: '2.4 km',
-      symbol: '🏛️',
-      colorClass: 'colonial-zone',
-    },
-    {
-      id: 3,
-      name: 'Jardín Botánico',
-      location: 'Distrito Nacional',
-      category: 'Naturaleza',
-      rating: 4.7,
-      distance: '6.8 km',
-      symbol: '🌳',
-      colorClass: 'botanical-garden',
-    },
-  ];
+  constructor(
+    public readonly favoritesService: FavoritesService
+  ) {
+    void this.favoritesService.initialize();
+  }
 
-  get filteredFavorites(): FavoritePlace[] {
-    const value = this.searchTerm.trim().toLowerCase();
+  get favorites(): Place[] {
+    return this.favoritesService.favorites();
+  }
+
+  get filteredFavorites(): Place[] {
+    const value = this.searchTerm
+      .trim()
+      .toLowerCase();
 
     if (!value) {
       return this.favorites;
     }
 
     return this.favorites.filter((place) =>
-      `${place.name} ${place.location} ${place.category}`
+      [
+        place.name,
+        place.city,
+        place.category,
+        place.distance,
+      ]
+        .join(' ')
         .toLowerCase()
         .includes(value)
     );
   }
 
-  removeFavorite(id: number): void {
-    this.favorites = this.favorites.filter((place) => place.id !== id);
+  async removeFavorite(id: number): Promise<void> {
+    if (this.removingFavoriteId !== null) {
+      return;
+    }
+
+    this.removingFavoriteId = id;
+
+    try {
+      await this.favoritesService.removeFavorite(id);
+    } catch (error: unknown) {
+      console.error(
+        'No fue posible eliminar el favorito:',
+        error
+      );
+    } finally {
+      this.removingFavoriteId = null;
+    }
+  }
+
+  async clearAllFavorites(): Promise<void> {
+    if (this.favorites.length === 0) {
+      return;
+    }
+
+    try {
+      await this.favoritesService.clearFavorites();
+      this.clearSearch();
+    } catch (error: unknown) {
+      console.error(
+        'No fue posible limpiar los favoritos:',
+        error
+      );
+    }
+  }
+
+  isRemovingFavorite(id: number): boolean {
+    return this.removingFavoriteId === id;
   }
 
   clearSearch(): void {
     this.searchTerm = '';
+  }
+
+  getPlaceSymbol(category: string): string {
+    switch (category.toLowerCase()) {
+      case 'playa':
+        return '🏖️';
+
+      case 'naturaleza':
+        return '🌳';
+
+      case 'cultura':
+        return '🏛️';
+
+      case 'historia':
+        return '🏰';
+
+      case 'paseo':
+        return '🚶';
+
+      default:
+        return '📍';
+    }
+  }
+
+  getPlaceColorClass(category: string): string {
+    switch (category.toLowerCase()) {
+      case 'playa':
+        return 'punta-cana';
+
+      case 'naturaleza':
+        return 'botanical-garden';
+
+      case 'cultura':
+      case 'historia':
+        return 'colonial-zone';
+
+      case 'paseo':
+        return 'walking-place';
+
+      default:
+        return 'default-place';
+    }
   }
 }

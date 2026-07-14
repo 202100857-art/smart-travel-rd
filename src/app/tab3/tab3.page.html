@@ -8,7 +8,11 @@
       </div>
 
       <div class="favorites-counter">
-        <ion-icon name="heart"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="heart"
+        ></ion-icon>
+
         <span>{{ favorites.length }}</span>
       </div>
     </div>
@@ -21,24 +25,40 @@
     <!-- Resumen -->
     <section class="summary-card">
       <div class="summary-icon">
-        <ion-icon name="bookmark-outline"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="bookmark-outline"
+        ></ion-icon>
       </div>
 
       <div>
         <span>Mi colección</span>
+
         <strong>
           {{ favorites.length }}
-          {{ favorites.length === 1 ? 'lugar guardado' : 'lugares guardados' }}
+          {{
+            favorites.length === 1
+              ? 'lugar guardado'
+              : 'lugares guardados'
+          }}
         </strong>
       </div>
 
-      <div class="summary-decoration" aria-hidden="true">✈️</div>
+      <div
+        class="summary-decoration"
+        aria-hidden="true"
+      >
+        ✈️
+      </div>
     </section>
 
     <!-- Buscador -->
     <section class="search-section">
       <div class="search-box">
-        <ion-icon name="search-outline"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="search-outline"
+        ></ion-icon>
 
         <input
           type="search"
@@ -53,22 +73,46 @@
           aria-label="Limpiar búsqueda"
           (click)="clearSearch()"
         >
-          <ion-icon name="close-circle"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            name="close-circle"
+          ></ion-icon>
         </button>
       </div>
     </section>
 
-    <!-- Encabezado de lista -->
+    <!-- Encabezado -->
     <section class="list-heading">
       <div>
-        <span class="section-eyebrow">Destinos guardados</span>
+        <span class="section-eyebrow">
+          Destinos guardados
+        </span>
+
         <h2>Mis lugares</h2>
       </div>
 
-      <span>{{ filteredFavorites.length }} resultados</span>
+      <div class="heading-actions">
+        <span>
+          {{ filteredFavorites.length }}
+          {{
+            filteredFavorites.length === 1
+              ? 'resultado'
+              : 'resultados'
+          }}
+        </span>
+
+        <button
+          *ngIf="favorites.length > 0"
+          type="button"
+          class="clear-all-button"
+          (click)="clearAllFavorites()"
+        >
+          Limpiar
+        </button>
+      </div>
     </section>
 
-    <!-- Lista de favoritos -->
+    <!-- Lista -->
     <section
       *ngIf="filteredFavorites.length > 0; else emptyState"
       class="favorites-list"
@@ -79,14 +123,17 @@
       >
         <div
           class="place-visual"
-          [ngClass]="place.colorClass"
+          [ngClass]="getPlaceColorClass(place.category)"
         >
           <span class="category-badge">
             {{ place.category }}
           </span>
 
-          <span class="place-symbol" aria-hidden="true">
-            {{ place.symbol }}
+          <span
+            class="place-symbol"
+            aria-hidden="true"
+          >
+            {{ getPlaceSymbol(place.category) }}
           </span>
 
           <span class="rating-badge">
@@ -100,41 +147,88 @@
               <h3>{{ place.name }}</h3>
 
               <p>
-                <ion-icon name="location-outline"></ion-icon>
-                {{ place.location }}
+                <ion-icon
+                  aria-hidden="true"
+                  name="location-outline"
+                ></ion-icon>
+
+                {{ place.city }}
               </p>
             </div>
 
             <button
               type="button"
               class="remove-button"
-              [attr.aria-label]="'Eliminar ' + place.name + ' de favoritos'"
+              [disabled]="isRemovingFavorite(place.id)"
+              [attr.aria-label]="
+                'Eliminar ' + place.name + ' de favoritos'
+              "
               (click)="removeFavorite(place.id)"
             >
-              <ion-icon name="heart"></ion-icon>
+              <ion-icon
+                aria-hidden="true"
+                [name]="
+                  isRemovingFavorite(place.id)
+                    ? 'hourglass-outline'
+                    : 'heart'
+                "
+              ></ion-icon>
             </button>
           </div>
 
           <div class="place-meta">
             <span>
-              <ion-icon name="navigate-outline"></ion-icon>
+              <ion-icon
+                aria-hidden="true"
+                name="navigate-outline"
+              ></ion-icon>
+
               {{ place.distance }}
             </span>
 
             <span>
-              <ion-icon name="pricetag-outline"></ion-icon>
+              <ion-icon
+                aria-hidden="true"
+                name="pricetag-outline"
+              ></ion-icon>
+
               {{ place.category }}
+            </span>
+
+            <span>
+              <ion-icon
+                aria-hidden="true"
+                name="star-outline"
+              ></ion-icon>
+
+              {{ place.rating }}
             </span>
           </div>
 
           <div class="card-actions">
-            <button type="button" class="secondary-button">
-              <ion-icon name="create-outline"></ion-icon>
+            <button
+              type="button"
+              class="secondary-button"
+              disabled
+              title="Disponible en una futura versión"
+            >
+              <ion-icon
+                aria-hidden="true"
+                name="create-outline"
+              ></ion-icon>
+
               Editar
             </button>
 
-            <a href="/tabs/tab2" class="primary-button">
-              <ion-icon name="map-outline"></ion-icon>
+            <a
+              href="/tabs/tab2"
+              class="primary-button"
+            >
+              <ion-icon
+                aria-hidden="true"
+                name="map-outline"
+              ></ion-icon>
+
               Ver en mapa
             </a>
           </div>
@@ -146,19 +240,31 @@
     <ng-template #emptyState>
       <section class="empty-state">
         <div class="empty-icon">
-          <ion-icon name="heart-outline"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            [name]="
+              searchTerm
+                ? 'search-outline'
+                : 'heart-outline'
+            "
+          ></ion-icon>
         </div>
 
         <h2>
-          {{ searchTerm ? 'No encontramos resultados' : 'Aún no tienes favoritos' }}
+          {{
+            searchTerm
+              ? 'No encontramos resultados'
+              : 'Aún no tienes favoritos'
+          }}
         </h2>
 
         <p *ngIf="searchTerm">
-          Prueba con otro nombre, ubicación o categoría.
+          Prueba con otro nombre, ciudad o categoría.
         </p>
 
         <p *ngIf="!searchTerm">
-          Explora destinos y guarda los lugares que quieras visitar.
+          Explora destinos y pulsa el corazón para guardar los lugares
+          que quieras visitar.
         </p>
 
         <button
@@ -180,16 +286,19 @@
       </section>
     </ng-template>
 
-    <!-- Información -->
+    <!-- Persistencia -->
     <section class="storage-note">
-      <ion-icon name="cloud-offline-outline"></ion-icon>
+      <ion-icon
+        aria-hidden="true"
+        name="cloud-offline-outline"
+      ></ion-icon>
 
       <div>
         <strong>Disponible sin conexión</strong>
 
         <p>
-          Tus lugares favoritos se almacenarán localmente para que puedas
-          consultarlos incluso cuando no tengas Internet.
+          Tus destinos se almacenan localmente mediante Capacitor
+          Preferences y permanecen guardados al cerrar la aplicación.
         </p>
       </div>
     </section>
