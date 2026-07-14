@@ -1,17 +1,168 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+    <div class="toolbar-content">
+      <div>
+        <span class="app-label">Smart Travel RD</span>
+        <h1>Hola, viajero</h1>
+      </div>
+
+      <button
+        type="button"
+        class="profile-button"
+        aria-label="Abrir perfil"
+      >
+        LM
+      </button>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <main class="home-container">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+    <!-- Estado de conexión -->
+    <section class="connection-status">
+      <span class="status-dot"></span>
+
+      <div>
+        <strong>Conectado</strong>
+        <small>Servicios disponibles</small>
+      </div>
+
+      <span class="connection-icon">📶</span>
+    </section>
+
+    <!-- Banner principal -->
+    <section class="hero-card">
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <span class="hero-tag">Destino recomendado</span>
+
+        <h2>Descubre República Dominicana</h2>
+
+        <p>
+          Explora playas, monumentos y experiencias inolvidables
+          desde una sola aplicación.
+        </p>
+
+        <a class="hero-button" href="/tabs/tab2">
+          Explorar destinos
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="hero-decoration" aria-hidden="true">
+        ✈️
+      </div>
+    </section>
+
+    <!-- Accesos rápidos -->
+    <section class="section-block">
+      <div class="section-heading">
+        <div>
+          <span class="section-eyebrow">Accesos rápidos</span>
+          <h2>¿Qué deseas hacer?</h2>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+
+        <a class="action-card" href="/tabs/tab2">
+          <span class="action-icon action-icon-blue">🗺️</span>
+
+          <div>
+            <strong>Explorar</strong>
+            <small>Mapa y lugares</small>
+          </div>
+        </a>
+
+        <a class="action-card" href="/tabs/tab3">
+          <span class="action-icon action-icon-red">❤️</span>
+
+          <div>
+            <strong>Favoritos</strong>
+            <small>Lugares guardados</small>
+          </div>
+        </a>
+
+        <a class="action-card" href="/tabs/tab4">
+          <span class="action-icon action-icon-cyan">🧰</span>
+
+          <div>
+            <strong>Herramientas</strong>
+            <small>Recursos de viaje</small>
+          </div>
+        </a>
+
+        <a class="action-card" href="/tabs/tab5">
+          <span class="action-icon action-icon-green">⚙️</span>
+
+          <div>
+            <strong>Más opciones</strong>
+            <small>Perfil y ajustes</small>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- Destino destacado -->
+    <section class="section-block">
+      <div class="section-heading">
+        <div>
+          <span class="section-eyebrow">Recomendación del día</span>
+          <h2>Destino destacado</h2>
+        </div>
+
+        <a href="/tabs/tab2">Ver todos</a>
+      </div>
+
+      <article class="destination-card">
+        <div class="destination-visual">
+          <span class="destination-badge">⭐ 4.9</span>
+
+          <div class="destination-illustration" aria-hidden="true">
+            🌴
+          </div>
+        </div>
+
+        <div class="destination-info">
+          <div>
+            <h3>Punta Cana</h3>
+            <p>La Altagracia, República Dominicana</p>
+          </div>
+
+          <button
+            type="button"
+            class="favorite-button"
+            aria-label="Guardar Punta Cana como favorito"
+          >
+            ♡
+          </button>
+        </div>
+
+        <div class="destination-details">
+          <span>🏖️ Playas</span>
+          <span>☀️ 29 °C</span>
+          <span>📍 198 km</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- Información del proyecto -->
+    <section class="travel-tip">
+      <div class="tip-icon" aria-hidden="true">💡</div>
+
+      <div>
+        <span>Consejo de viaje</span>
+
+        <p>
+          Guarda tus destinos favoritos para consultarlos rápidamente
+          durante tu recorrido.
+        </p>
+      </div>
+    </section>
+
+  </main>
 </ion-content>
