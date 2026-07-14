@@ -1,13 +1,245 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>tab5</ion-title>
+    <div class="more-header">
+      <div>
+        <span class="section-label">Smart Travel RD</span>
+        <h1>Más</h1>
+        <p>Perfil, ajustes e información</p>
+      </div>
+
+      <div class="version-badge">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        <span>Demo 1.0</span>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">tab5</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <main class="more-container">
+
+    <!-- Perfil -->
+    <section class="profile-card">
+      <div class="profile-avatar">
+        <span>LM</span>
+        <div class="online-indicator"></div>
+      </div>
+
+      <div class="profile-information">
+        <span>Viajero</span>
+        <h2>Luis Marte</h2>
+        <p>República Dominicana</p>
+      </div>
+
+      <button
+        type="button"
+        class="profile-action"
+        [attr.aria-label]="
+          profileExpanded
+            ? 'Ocultar información del perfil'
+            : 'Mostrar información del perfil'
+        "
+        (click)="toggleProfile()"
+      >
+        <ion-icon
+          [name]="
+            profileExpanded
+              ? 'chevron-up-outline'
+              : 'chevron-down-outline'
+          "
+        ></ion-icon>
+      </button>
+
+      <div
+        *ngIf="profileExpanded"
+        class="profile-details"
+      >
+        <div>
+          <span>Destino favorito</span>
+          <strong>Punta Cana</strong>
+        </div>
+
+        <div>
+          <span>Lugares guardados</span>
+          <strong>3 destinos</strong>
+        </div>
+
+        <div>
+          <span>Idioma</span>
+          <strong>Español</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- Estado de la aplicación -->
+    <section class="app-status">
+      <div class="status-card">
+        <span class="status-icon connected">
+          <ion-icon name="wifi-outline"></ion-icon>
+        </span>
+
+        <div>
+          <small>Conectividad</small>
+          <strong>En línea</strong>
+        </div>
+
+        <span class="status-dot"></span>
+      </div>
+
+      <div class="status-card">
+        <span class="status-icon storage">
+          <ion-icon name="server-outline"></ion-icon>
+        </span>
+
+        <div>
+          <small>Almacenamiento</small>
+          <strong>Disponible</strong>
+        </div>
+
+        <ion-icon
+          class="status-check"
+          name="checkmark-circle"
+        ></ion-icon>
+      </div>
+    </section>
+
+    <!-- Preferencias -->
+    <section class="settings-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-eyebrow">Personalización</span>
+          <h2>Preferencias</h2>
+        </div>
+      </div>
+
+      <div class="settings-list">
+        <article
+          *ngFor="let option of settings"
+          class="setting-card"
+        >
+          <span
+            class="setting-icon"
+            [ngClass]="option.colorClass"
+          >
+            <ion-icon [name]="option.icon"></ion-icon>
+          </span>
+
+          <div class="setting-information">
+            <strong>{{ option.title }}</strong>
+            <p>{{ option.description }}</p>
+          </div>
+
+          <ion-toggle
+            [(ngModel)]="option.enabled"
+            [attr.aria-label]="option.title"
+          ></ion-toggle>
+        </article>
+      </div>
+    </section>
+
+    <!-- Opciones generales -->
+    <section class="options-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-eyebrow">Aplicación</span>
+          <h2>Información y soporte</h2>
+        </div>
+      </div>
+
+      <div class="options-list">
+
+        <button type="button" class="option-row">
+          <span class="option-icon about-option">
+            <ion-icon name="information-circle-outline"></ion-icon>
+          </span>
+
+          <div>
+            <strong>Acerca de Smart Travel RD</strong>
+            <small>Conoce el propósito de la aplicación</small>
+          </div>
+
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+
+        <button type="button" class="option-row">
+          <span class="option-icon permissions-option">
+            <ion-icon name="key-outline"></ion-icon>
+          </span>
+
+          <div>
+            <strong>Permisos del dispositivo</strong>
+            <small>Cámara, GPS, Bluetooth y NFC</small>
+          </div>
+
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+
+        <button type="button" class="option-row">
+          <span class="option-icon help-option">
+            <ion-icon name="help-circle-outline"></ion-icon>
+          </span>
+
+          <div>
+            <strong>Ayuda</strong>
+            <small>Guía básica para usar la aplicación</small>
+          </div>
+
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Información técnica -->
+    <section class="technical-card">
+      <div class="technical-header">
+        <div>
+          <span class="section-eyebrow">Información técnica</span>
+          <h2>Estado del proyecto</h2>
+        </div>
+
+        <span class="demo-badge">Demo académica</span>
+      </div>
+
+      <div class="technical-grid">
+        <div>
+          <span>Framework</span>
+          <strong>Ionic + Angular</strong>
+        </div>
+
+        <div>
+          <span>Integración nativa</span>
+          <strong>Capacitor</strong>
+        </div>
+
+        <div>
+          <span>Plataforma</span>
+          <strong>Web / Android</strong>
+        </div>
+
+        <div>
+          <span>Versión</span>
+          <strong>1.0.0</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- Descripción -->
+    <section class="about-project">
+      <div class="about-icon">
+        <ion-icon name="airplane-outline"></ion-icon>
+      </div>
+
+      <div>
+        <strong>Smart Travel RD</strong>
+
+        <p>
+          Aplicación móvil demostrativa diseñada para integrar navegación,
+          conectividad, geolocalización, almacenamiento, multimedia,
+          cámara y servicios web dentro de una solución orientada al turismo.
+        </p>
+      </div>
+    </section>
+
+  </main>
 </ion-content>
