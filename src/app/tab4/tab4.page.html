@@ -1,13 +1,209 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>tab4</ion-title>
+    <div class="tools-header">
+      <div>
+        <span class="section-label">Smart Travel RD</span>
+        <h1>Herramientas</h1>
+        <p>Recursos útiles para tu viaje</p>
+      </div>
+
+      <div class="device-badge">
+        <ion-icon name="phone-portrait-outline"></ion-icon>
+        <span>Dispositivo móvil</span>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">tab4</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <main class="tools-container">
+
+    <!-- Presentación -->
+    <section class="tools-hero">
+      <div class="hero-content">
+        <span>Centro de recursos</span>
+
+        <h2>Todo lo que necesitas durante tu viaje</h2>
+
+        <p>
+          Accede a las funciones del dispositivo desde un solo lugar.
+        </p>
+      </div>
+
+      <div class="hero-icon" aria-hidden="true">
+        🧳
+      </div>
+    </section>
+
+    <!-- Estado del dispositivo -->
+    <section class="device-status">
+      <div class="status-item">
+        <span class="status-icon success">
+          <ion-icon name="wifi-outline"></ion-icon>
+        </span>
+
+        <div>
+          <strong>Conectividad</strong>
+          <small>Disponible</small>
+        </div>
+      </div>
+
+      <div class="status-item">
+        <span class="status-icon primary">
+          <ion-icon name="hardware-chip-outline"></ion-icon>
+        </span>
+
+        <div>
+          <strong>Capacitor</strong>
+          <small>Preparado</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- Herramientas -->
+    <section class="tools-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-eyebrow">Funciones del dispositivo</span>
+          <h2>Selecciona una herramienta</h2>
+        </div>
+
+        <span>{{ tools.length }} disponibles</span>
+      </div>
+
+      <div class="tools-grid">
+        <button
+          *ngFor="let tool of tools"
+          type="button"
+          class="tool-card"
+          (click)="selectTool(tool)"
+        >
+          <span
+            class="tool-icon"
+            [ngClass]="tool.colorClass"
+          >
+            <ion-icon [name]="tool.icon"></ion-icon>
+          </span>
+
+          <div class="tool-information">
+            <div class="tool-title">
+              <h3>{{ tool.title }}</h3>
+
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </div>
+
+            <p>{{ tool.description }}</p>
+
+            <span
+              class="tool-status"
+              [ngClass]="tool.statusClass"
+            >
+              {{ tool.status }}
+            </span>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <!-- Reproductor demostrativo -->
+    <section class="audio-player">
+      <div class="audio-cover">
+        <ion-icon name="musical-notes-outline"></ion-icon>
+      </div>
+
+      <div class="audio-information">
+        <span>Audioguía destacada</span>
+        <strong>Historia de la Zona Colonial</strong>
+        <small>Duración: 03:45</small>
+
+        <div class="progress-track">
+          <span [class.playing]="audioPlaying"></span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="play-button"
+        [attr.aria-label]="audioPlaying ? 'Pausar audioguía' : 'Reproducir audioguía'"
+        (click)="toggleAudio()"
+      >
+        <ion-icon
+          [name]="audioPlaying ? 'pause' : 'play'"
+        ></ion-icon>
+      </button>
+    </section>
+
+    <!-- Compatibilidad -->
+    <section class="compatibility-card">
+      <div class="compatibility-icon">
+        <ion-icon name="information-circle-outline"></ion-icon>
+      </div>
+
+      <div>
+        <strong>Compatibilidad del dispositivo</strong>
+
+        <p>
+          Algunas funciones, como Bluetooth y NFC, dependen del hardware,
+          del sistema operativo y de los permisos concedidos por el usuario.
+        </p>
+      </div>
+    </section>
+
+    <!-- Panel de detalle -->
+    <section
+      *ngIf="selectedTool"
+      class="tool-detail-overlay"
+      (click)="closeToolDetails()"
+    >
+      <article
+        class="tool-detail-card"
+        (click)="$event.stopPropagation()"
+      >
+        <button
+          type="button"
+          class="close-button"
+          aria-label="Cerrar detalle"
+          (click)="closeToolDetails()"
+        >
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+
+        <span
+          class="detail-icon"
+          [ngClass]="selectedTool.colorClass"
+        >
+          <ion-icon [name]="selectedTool.icon"></ion-icon>
+        </span>
+
+        <span
+          class="tool-status"
+          [ngClass]="selectedTool.statusClass"
+        >
+          {{ selectedTool.status }}
+        </span>
+
+        <h2>{{ selectedTool.title }}</h2>
+
+        <p>{{ selectedTool.description }}</p>
+
+        <div class="detail-note">
+          <ion-icon name="construct-outline"></ion-icon>
+
+          <span>
+            Esta herramienta será conectada con su integración nativa
+            correspondiente durante la fase de implementación.
+          </span>
+        </div>
+
+        <button
+          type="button"
+          class="detail-action"
+          (click)="closeToolDetails()"
+        >
+          Entendido
+        </button>
+      </article>
+    </section>
+
+  </main>
 </ion-content>
