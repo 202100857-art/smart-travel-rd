@@ -5,7 +5,8 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonToolbar, IonTitle } from '@ionic/angular/standalone';
+   IonTitle,
+  IonToolbar, } from '@ionic/angular/standalone';
 
 interface FavoritePlace {
   id: number;

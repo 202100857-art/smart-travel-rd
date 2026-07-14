@@ -67,60 +67,72 @@
       </div>
     </section>
 
-    <!-- Área reservada para Leaflet -->
-    <section class="map-card">
-      <div class="map-placeholder">
+    <!-- Mapa real con Leaflet -->
+<section class="map-card">
+  <div class="map-wrapper">
+    <div
+      id="travel-map"
+      class="leaflet-map"
+      aria-label="Mapa interactivo de lugares turísticos"
+    ></div>
 
-        <div class="map-grid"></div>
+    <button
+      type="button"
+      class="location-button"
+      [disabled]="isLocating"
+      aria-label="Obtener mi ubicación"
+      (click)="centerOnCurrentLocation()"
+    >
+      <ion-icon
+        [name]="isLocating ? 'hourglass-outline' : 'locate-outline'"
+      ></ion-icon>
+    </button>
+  </div>
 
-        <div class="map-message">
-          <div class="map-icon">
-            <ion-icon name="map-outline"></ion-icon>
-          </div>
+  <div
+    class="map-status"
+    [class.location-error]="locationError"
+  >
+    <div>
+      <span class="status-dot"></span>
 
-          <strong>Mapa interactivo</strong>
+      <div>
+        <strong>
+          @if (isLocating) {
+            Buscando ubicación
+          } @else if (currentLocation) {
+            Ubicación encontrada
+          } @else if (locationError) {
+            Ubicación no disponible
+          } @else {
+            Mapa disponible
+          }
+        </strong>
 
-          <p>
-            Aquí se mostrará tu ubicación y los lugares turísticos
-            cercanos mediante Leaflet y OpenStreetMap.
-          </p>
-        </div>
-
-        <div class="mock-marker marker-one">
-          <span>🏛️</span>
-        </div>
-
-        <div class="mock-marker marker-two">
-          <span>🏖️</span>
-        </div>
-
-        <div class="mock-marker marker-three">
-          <span>🍽️</span>
-        </div>
-
-        <button
-          type="button"
-          class="location-button"
-          aria-label="Obtener mi ubicación"
-        >
-          <ion-icon name="locate-outline"></ion-icon>
-        </button>
-
+        <small>
+          @if (isLocating) {
+            Espera mientras consultamos el GPS
+          } @else if (currentLocation) {
+            {{ currentLocation.latitude.toFixed(5) }},
+            {{ currentLocation.longitude.toFixed(5) }}
+          } @else if (locationError) {
+            {{ locationError }}
+          } @else {
+            Pulsa el botón para mostrar tu posición
+          }
+        </small>
       </div>
+    </div>
 
-      <div class="map-status">
-        <div>
-          <span class="status-dot"></span>
-
-          <div>
-            <strong>Ubicación disponible</strong>
-            <small>GPS preparado para la integración</small>
-          </div>
-        </div>
-
-        <button type="button">Actualizar</button>
-      </div>
-    </section>
+    <button
+      type="button"
+      [disabled]="isLocating"
+      (click)="locateUser()"
+    >
+      {{ currentLocation ? 'Actualizar' : 'Ubicarme' }}
+    </button>
+  </div>
+</section>
 
     <!-- Lugares cercanos -->
     <section class="places-section">

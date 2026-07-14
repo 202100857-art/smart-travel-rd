@@ -189,126 +189,47 @@ ion-content {
   box-shadow: 0 10px 28px rgba(38, 50, 56, 0.08);
 }
 
-.map-placeholder {
+.map-wrapper {
   position: relative;
-  display: grid;
-  min-height: 310px;
+  min-height: 340px;
   overflow: hidden;
-  background:
-    linear-gradient(rgba(21, 101, 192, 0.04), rgba(21, 101, 192, 0.04)),
-    #e8f1f5;
-  place-items: center;
+  background: #dce8ed;
 }
 
-.map-grid {
-  position: absolute;
-  inset: 0;
-  opacity: 0.52;
-  background-image:
-    linear-gradient(rgba(21, 101, 192, 0.09) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(21, 101, 192, 0.09) 1px, transparent 1px);
-  background-size: 34px 34px;
-  transform: rotate(-8deg) scale(1.2);
+.leaflet-map {
+  width: 100%;
+  height: 340px;
+  z-index: 1;
 }
 
-.map-placeholder::before,
-.map-placeholder::after {
-  content: "";
-  position: absolute;
-  border-radius: 999px;
-  background: rgba(38, 198, 218, 0.2);
-  transform: rotate(-20deg);
+.location-button {
+  z-index: 500;
 }
 
-.map-placeholder::before {
-  top: 18%;
-  left: -10%;
-  width: 75%;
-  height: 17px;
+.location-button:disabled,
+.map-status button:disabled {
+  opacity: 0.65;
+  cursor: wait;
 }
 
-.map-placeholder::after {
-  right: -15%;
-  bottom: 20%;
-  width: 80%;
-  height: 21px;
+.map-status.location-error {
+  background: rgba(229, 57, 53, 0.05);
 }
 
-.map-message {
-  position: relative;
-  z-index: 3;
-  width: min(76%, 360px);
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.72);
-  border-radius: 19px;
-  background: rgba(255, 255, 255, 0.87);
-  text-align: center;
-  box-shadow: 0 12px 28px rgba(38, 50, 56, 0.11);
-  backdrop-filter: blur(9px);
-}
-
-.map-icon {
-  display: grid;
-  width: 46px;
-  height: 46px;
-  margin: 0 auto 10px;
-  border-radius: 15px;
-  background: rgba(21, 101, 192, 0.11);
-  color: var(--ion-color-primary);
-  place-items: center;
-}
-
-.map-icon ion-icon {
-  font-size: 25px;
-}
-
-.map-message strong {
-  display: block;
-  color: var(--smart-travel-text);
-  font-size: 15px;
-}
-
-.map-message p {
-  margin: 7px 0 0;
-  color: var(--smart-travel-text-secondary);
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.mock-marker {
-  position: absolute;
-  z-index: 2;
-  display: grid;
-  width: 38px;
-  height: 38px;
-  border: 3px solid #ffffff;
-  border-radius: 50% 50% 50% 0;
-  background: var(--ion-color-primary);
-  box-shadow: 0 7px 14px rgba(38, 50, 56, 0.2);
-  place-items: center;
-  transform: rotate(-45deg);
-}
-
-.mock-marker span {
-  font-size: 16px;
-  transform: rotate(45deg);
-}
-
-.marker-one {
-  top: 18%;
-  left: 13%;
-}
-
-.marker-two {
-  right: 14%;
-  bottom: 20%;
-  background: var(--ion-color-secondary);
-}
-
-.marker-three {
-  top: 18%;
-  right: 17%;
+.map-status.location-error .status-dot {
   background: var(--ion-color-danger);
+  box-shadow: 0 0 0 5px rgba(229, 57, 53, 0.12);
+}
+
+.map-status.location-error strong {
+  color: #c62828;
+}
+
+@media (min-width: 700px) {
+  .map-wrapper,
+  .leaflet-map {
+    height: 390px;
+  }
 }
 
 .location-button {
@@ -558,10 +479,6 @@ ion-content {
   .explore-container {
     padding-right: 24px;
     padding-left: 24px;
-  }
-
-  .map-placeholder {
-    min-height: 390px;
   }
 
   .places-list {

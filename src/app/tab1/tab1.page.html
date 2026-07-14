@@ -21,16 +21,41 @@
   <main class="home-container">
 
     <!-- Estado de conexión -->
-    <section class="connection-status">
-      <span class="status-dot"></span>
+  <section
+  class="connection-status"
+  [class.offline]="
+    networkService.initialized() &&
+    !networkService.connected()
+  "
+>
+  <span class="status-dot"></span>
 
-      <div>
-        <strong>Conectado</strong>
-        <small>Servicios disponibles</small>
-      </div>
+  <div>
+    <strong>
+      @if (!networkService.initialized()) {
+        Verificando conexión
+      } @else if (networkService.connected()) {
+        Conectado
+      } @else {
+        Sin conexión
+      }
+    </strong>
 
-      <span class="connection-icon">📶</span>
-    </section>
+    <small>
+      @if (!networkService.initialized()) {
+        Consultando estado de la red
+      } @else if (networkService.connected()) {
+        {{ networkService.connectionLabel }}
+      } @else {
+        Algunas funciones no están disponibles
+      }
+    </small>
+  </div>
+
+  <span class="connection-icon">
+    {{ networkService.connected() ? '📶' : '📵' }}
+  </span>
+</section>
 
     <!-- Banner principal -->
     <section class="hero-card">

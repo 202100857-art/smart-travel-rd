@@ -478,3 +478,16 @@ ion-content {
     align-self: end;
   }
 }
+.connection-status.offline {
+  border-color: rgba(229, 57, 53, 0.16);
+  background: rgba(229, 57, 53, 0.08);
+}
+
+.connection-status.offline .status-dot {
+  background: var(--ion-color-danger);
+  box-shadow: 0 0 0 5px rgba(229, 57, 53, 0.12);
+}
+
+.connection-status.offline strong {
+  color: #c62828;
+}
