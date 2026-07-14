@@ -1,17 +1,232 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
+    <div class="explore-header">
+      <div>
+        <span class="section-label">Smart Travel RD</span>
+        <h1>Explorar</h1>
+        <p>Descubre lugares cerca de ti</p>
+      </div>
+
+      <div class="location-badge">
+        <ion-icon name="location-outline"></ion-icon>
+        <span>Santo Domingo</span>
+      </div>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <main class="explore-container">
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+    <!-- Buscador -->
+    <section class="search-section">
+      <div class="search-box">
+        <ion-icon name="search-outline"></ion-icon>
+
+        <input
+          type="search"
+          placeholder="Buscar playas, museos o restaurantes"
+          aria-label="Buscar lugares"
+        />
+
+        <button type="button" aria-label="Aplicar filtros">
+          <ion-icon name="options-outline"></ion-icon>
+        </button>
+      </div>
+    </section>
+
+    <!-- Categorías -->
+    <section class="categories-section">
+      <div class="category-list">
+
+        <button type="button" class="category-button active">
+          <span>🌎</span>
+          Todos
+        </button>
+
+        <button type="button" class="category-button">
+          <span>🏖️</span>
+          Playas
+        </button>
+
+        <button type="button" class="category-button">
+          <span>🏛️</span>
+          Cultura
+        </button>
+
+        <button type="button" class="category-button">
+          <span>🍽️</span>
+          Restaurantes
+        </button>
+
+        <button type="button" class="category-button">
+          <span>🏨</span>
+          Hoteles
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Área reservada para Leaflet -->
+    <section class="map-card">
+      <div class="map-placeholder">
+
+        <div class="map-grid"></div>
+
+        <div class="map-message">
+          <div class="map-icon">
+            <ion-icon name="map-outline"></ion-icon>
+          </div>
+
+          <strong>Mapa interactivo</strong>
+
+          <p>
+            Aquí se mostrará tu ubicación y los lugares turísticos
+            cercanos mediante Leaflet y OpenStreetMap.
+          </p>
+        </div>
+
+        <div class="mock-marker marker-one">
+          <span>🏛️</span>
+        </div>
+
+        <div class="mock-marker marker-two">
+          <span>🏖️</span>
+        </div>
+
+        <div class="mock-marker marker-three">
+          <span>🍽️</span>
+        </div>
+
+        <button
+          type="button"
+          class="location-button"
+          aria-label="Obtener mi ubicación"
+        >
+          <ion-icon name="locate-outline"></ion-icon>
+        </button>
+
+      </div>
+
+      <div class="map-status">
+        <div>
+          <span class="status-dot"></span>
+
+          <div>
+            <strong>Ubicación disponible</strong>
+            <small>GPS preparado para la integración</small>
+          </div>
+        </div>
+
+        <button type="button">Actualizar</button>
+      </div>
+    </section>
+
+    <!-- Lugares cercanos -->
+    <section class="places-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-eyebrow">Recomendaciones</span>
+          <h2>Lugares cercanos</h2>
+        </div>
+
+        <button type="button">Ver todos</button>
+      </div>
+
+      <div class="places-list">
+
+        <article class="place-card">
+          <div class="place-image colonial-zone">
+            <span class="place-category">Cultura</span>
+            <span class="place-symbol">🏛️</span>
+          </div>
+
+          <div class="place-content">
+            <div class="place-title">
+              <div>
+                <h3>Zona Colonial</h3>
+                <p>Santo Domingo</p>
+              </div>
+
+              <button
+                type="button"
+                class="favorite-button"
+                aria-label="Guardar Zona Colonial"
+              >
+                <ion-icon name="heart-outline"></ion-icon>
+              </button>
+            </div>
+
+            <div class="place-meta">
+              <span>⭐ 4.8</span>
+              <span>📍 2.4 km</span>
+              <span>🕐 Abierto</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="place-card">
+          <div class="place-image boca-chica">
+            <span class="place-category">Playa</span>
+            <span class="place-symbol">🏖️</span>
+          </div>
+
+          <div class="place-content">
+            <div class="place-title">
+              <div>
+                <h3>Playa Boca Chica</h3>
+                <p>Santo Domingo</p>
+              </div>
+
+              <button
+                type="button"
+                class="favorite-button"
+                aria-label="Guardar Playa Boca Chica"
+              >
+                <ion-icon name="heart-outline"></ion-icon>
+              </button>
+            </div>
+
+            <div class="place-meta">
+              <span>⭐ 4.6</span>
+              <span>📍 30 km</span>
+              <span>☀️ 30 °C</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="place-card">
+          <div class="place-image botanical-garden">
+            <span class="place-category">Naturaleza</span>
+            <span class="place-symbol">🌳</span>
+          </div>
+
+          <div class="place-content">
+            <div class="place-title">
+              <div>
+                <h3>Jardín Botánico</h3>
+                <p>Distrito Nacional</p>
+              </div>
+
+              <button
+                type="button"
+                class="favorite-button"
+                aria-label="Guardar Jardín Botánico"
+              >
+                <ion-icon name="heart-outline"></ion-icon>
+              </button>
+            </div>
+
+            <div class="place-meta">
+              <span>⭐ 4.7</span>
+              <span>📍 6.8 km</span>
+              <span>🌿 Natural</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </main>
 </ion-content>
