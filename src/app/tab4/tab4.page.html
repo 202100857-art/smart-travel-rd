@@ -8,7 +8,11 @@
       </div>
 
       <div class="device-badge">
-        <ion-icon name="phone-portrait-outline"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="phone-portrait-outline"
+        ></ion-icon>
+
         <span>Dispositivo móvil</span>
       </div>
     </div>
@@ -18,7 +22,6 @@
 <ion-content [fullscreen]="true">
   <main class="tools-container">
 
-    <!-- Presentación -->
     <section class="tools-hero">
       <div class="hero-content">
         <span>Centro de recursos</span>
@@ -35,22 +38,53 @@
       </div>
     </section>
 
-    <!-- Estado del dispositivo -->
     <section class="device-status">
-      <div class="status-item">
-        <span class="status-icon success">
-          <ion-icon name="wifi-outline"></ion-icon>
-        </span>
+     <div
+  class="status-item"
+  [class.offline-status]="
+    networkService.initialized() &&
+    !networkService.connected()
+  "
+>
+  <span
+    class="status-icon"
+    [class.success]="networkService.connected()"
+    [class.disconnected]="
+      networkService.initialized() &&
+      !networkService.connected()
+    "
+  >
+    <ion-icon
+      aria-hidden="true"
+      [name]="
+        networkService.connected()
+          ? 'wifi-outline'
+          : 'cloud-offline-outline'
+      "
+    ></ion-icon>
+  </span>
 
-        <div>
-          <strong>Conectividad</strong>
-          <small>Disponible</small>
-        </div>
-      </div>
+  <div>
+    <strong>Conectividad</strong>
+
+    <small>
+      @if (!networkService.initialized()) {
+        Verificando red
+      } @else if (networkService.connected()) {
+        {{ networkService.connectionLabel }}
+      } @else {
+        Sin conexión
+      }
+    </small>
+  </div>
+</div>
 
       <div class="status-item">
         <span class="status-icon primary">
-          <ion-icon name="hardware-chip-outline"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            name="hardware-chip-outline"
+          ></ion-icon>
         </span>
 
         <div>
@@ -60,11 +94,13 @@
       </div>
     </section>
 
-    <!-- Herramientas -->
     <section class="tools-section">
       <div class="section-heading">
         <div>
-          <span class="section-eyebrow">Funciones del dispositivo</span>
+          <span class="section-eyebrow">
+            Funciones del dispositivo
+          </span>
+
           <h2>Selecciona una herramienta</h2>
         </div>
 
@@ -82,14 +118,20 @@
             class="tool-icon"
             [ngClass]="tool.colorClass"
           >
-            <ion-icon [name]="tool.icon"></ion-icon>
+            <ion-icon
+              aria-hidden="true"
+              [name]="tool.icon"
+            ></ion-icon>
           </span>
 
           <div class="tool-information">
             <div class="tool-title">
               <h3>{{ tool.title }}</h3>
 
-              <ion-icon name="chevron-forward-outline"></ion-icon>
+              <ion-icon
+                aria-hidden="true"
+                name="chevron-forward-outline"
+              ></ion-icon>
             </div>
 
             <p>{{ tool.description }}</p>
@@ -105,10 +147,89 @@
       </div>
     </section>
 
-    <!-- Reproductor demostrativo -->
+    <!-- Vista previa de la última fotografía -->
+    @if (cameraService.photo()) {
+      <section class="camera-preview-card">
+        <div class="preview-heading">
+          <div>
+            <span class="section-eyebrow">
+              Última captura
+            </span>
+
+            <h2>Fotografía del viaje</h2>
+          </div>
+
+          <span class="captured-badge">
+            Capturada
+          </span>
+        </div>
+
+        <img
+          [src]="cameraService.photo()!.webPath"
+          alt="Fotografía capturada durante el viaje"
+        />
+
+        <div class="photo-metadata">
+          <span>
+            <ion-icon
+              aria-hidden="true"
+              name="image-outline"
+            ></ion-icon>
+
+            {{ cameraService.photo()!.format | uppercase }}
+          </span>
+
+          <span>
+            <ion-icon
+              aria-hidden="true"
+              name="time-outline"
+            ></ion-icon>
+
+            {{
+              formatCaptureDate(
+                cameraService.photo()!.capturedAt
+              )
+            }}
+          </span>
+        </div>
+
+        <div class="preview-actions">
+          <button
+            type="button"
+            class="repeat-photo-button"
+            [disabled]="cameraService.loading()"
+            (click)="capturePhoto()"
+          >
+            <ion-icon
+              aria-hidden="true"
+              name="camera-reverse-outline"
+            ></ion-icon>
+
+            Repetir foto
+          </button>
+
+          <button
+            type="button"
+            class="delete-photo-button"
+            (click)="removePhoto()"
+          >
+            <ion-icon
+              aria-hidden="true"
+              name="trash-outline"
+            ></ion-icon>
+
+            Eliminar
+          </button>
+        </div>
+      </section>
+    }
+
     <section class="audio-player">
       <div class="audio-cover">
-        <ion-icon name="musical-notes-outline"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="musical-notes-outline"
+        ></ion-icon>
       </div>
 
       <div class="audio-information">
@@ -124,32 +245,39 @@
       <button
         type="button"
         class="play-button"
-        [attr.aria-label]="audioPlaying ? 'Pausar audioguía' : 'Reproducir audioguía'"
+        [attr.aria-label]="
+          audioPlaying
+            ? 'Pausar audioguía'
+            : 'Reproducir audioguía'
+        "
         (click)="toggleAudio()"
       >
         <ion-icon
+          aria-hidden="true"
           [name]="audioPlaying ? 'pause' : 'play'"
         ></ion-icon>
       </button>
     </section>
 
-    <!-- Compatibilidad -->
     <section class="compatibility-card">
       <div class="compatibility-icon">
-        <ion-icon name="information-circle-outline"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="information-circle-outline"
+        ></ion-icon>
       </div>
 
       <div>
         <strong>Compatibilidad del dispositivo</strong>
 
         <p>
-          Algunas funciones, como Bluetooth y NFC, dependen del hardware,
-          del sistema operativo y de los permisos concedidos por el usuario.
+          Cámara, Bluetooth y NFC dependen del hardware, del sistema
+          operativo y de los permisos concedidos por el usuario.
         </p>
       </div>
     </section>
 
-    <!-- Panel de detalle -->
+    <!-- Panel inferior -->
     <section
       *ngIf="selectedTool"
       class="tool-detail-overlay"
@@ -162,17 +290,23 @@
         <button
           type="button"
           class="close-button"
-          aria-label="Cerrar detalle"
+          aria-label="Cerrar herramienta"
           (click)="closeToolDetails()"
         >
-          <ion-icon name="close-outline"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            name="close-outline"
+          ></ion-icon>
         </button>
 
         <span
           class="detail-icon"
           [ngClass]="selectedTool.colorClass"
         >
-          <ion-icon [name]="selectedTool.icon"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            [name]="selectedTool.icon"
+          ></ion-icon>
         </span>
 
         <span
@@ -186,24 +320,83 @@
 
         <p>{{ selectedTool.description }}</p>
 
-        <div class="detail-note">
-          <ion-icon name="construct-outline"></ion-icon>
+        @if (selectedTool.id === 'camera') {
+          <div class="camera-detail-content">
 
-          <span>
-            Esta herramienta será conectada con su integración nativa
-            correspondiente durante la fase de implementación.
-          </span>
-        </div>
+            @if (cameraService.error()) {
+              <div class="camera-error">
+                <ion-icon
+                  aria-hidden="true"
+                  name="alert-circle-outline"
+                ></ion-icon>
 
-        <button
-          type="button"
-          class="detail-action"
-          (click)="closeToolDetails()"
-        >
-          Entendido
-        </button>
+                <span>{{ cameraService.error() }}</span>
+              </div>
+            }
+
+            @if (cameraService.photo()) {
+              <img
+                class="detail-photo-preview"
+                [src]="cameraService.photo()!.webPath"
+                alt="Vista previa de la fotografía"
+              />
+            }
+
+            <button
+              type="button"
+              class="detail-action"
+              [disabled]="cameraService.loading()"
+              (click)="capturePhoto()"
+            >
+              <ion-icon
+                aria-hidden="true"
+                [name]="
+                  cameraService.loading()
+                    ? 'hourglass-outline'
+                    : 'camera-outline'
+                "
+              ></ion-icon>
+
+              {{
+                cameraService.loading()
+                  ? 'Abriendo cámara...'
+                  : cameraService.photo()
+                    ? 'Tomar otra fotografía'
+                    : 'Abrir cámara'
+              }}
+            </button>
+          </div>
+        } @else {
+          <div class="detail-note">
+            <ion-icon
+              aria-hidden="true"
+              name="construct-outline"
+            ></ion-icon>
+
+            <span>
+              Esta herramienta se conectará con su integración nativa
+              correspondiente durante la siguiente fase.
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="detail-action"
+            (click)="closeToolDetails()"
+          >
+            Entendido
+          </button>
+        }
       </article>
     </section>
 
   </main>
+
+  <ion-toast
+    [isOpen]="toastOpen"
+    [message]="toastMessage"
+    [duration]="2200"
+    position="bottom"
+    (didDismiss)="toastOpen = false"
+  ></ion-toast>
 </ion-content>

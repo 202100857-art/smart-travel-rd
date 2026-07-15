@@ -6,7 +6,7 @@ import {
   IonHeader,
   IonIcon,
   IonToggle,
-  IonToolbar, IonTitle } from '@ionic/angular/standalone';
+  IonToolbar,} from '@ionic/angular/standalone';
 
 interface SettingsOption {
   id: string;
@@ -22,7 +22,7 @@ interface SettingsOption {
   templateUrl: 'tab5.page.html',
   styleUrls: ['tab5.page.scss'],
   standalone: true,
-  imports: [IonTitle, 
+  imports: [
     CommonModule,
     FormsModule,
     IonContent,

@@ -602,4 +602,165 @@ ion-content {
   .tool-detail-overlay {
     align-items: center;
   }
+  .camera-preview-card {
+  margin-top: 24px;
+  overflow: hidden;
+  padding: 15px;
+  border: 1px solid var(--smart-travel-border);
+  border-radius: 21px;
+  background: var(--smart-travel-surface);
+  box-shadow: 0 8px 23px rgba(38, 50, 56, 0.065);
+}
+
+.preview-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 13px;
+}
+
+.preview-heading h2 {
+  margin: 4px 0 0;
+  color: var(--smart-travel-text);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.captured-badge {
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: rgba(67, 160, 71, 0.1);
+  color: #2e7d32;
+  font-size: 8px;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.camera-preview-card > img,
+.detail-photo-preview {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  background: #eceff1;
+}
+
+.camera-preview-card > img {
+  height: 230px;
+  border-radius: 16px;
+}
+
+.detail-photo-preview {
+  max-height: 270px;
+  margin-top: 15px;
+  border-radius: 15px;
+}
+
+.photo-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.photo-metadata span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 9px;
+  border-radius: 9px;
+  background: var(--smart-travel-background);
+  color: var(--smart-travel-text-secondary);
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.photo-metadata ion-icon {
+  color: var(--ion-color-primary);
+  font-size: 14px;
+}
+
+.preview-actions {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.preview-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.repeat-photo-button {
+  border: 0;
+  background: var(--ion-color-primary);
+  color: #ffffff;
+}
+
+.delete-photo-button {
+  border: 1px solid rgba(229, 57, 53, 0.16);
+  background: rgba(229, 57, 53, 0.08);
+  color: var(--ion-color-danger);
+}
+
+.preview-actions button:disabled,
+.detail-action:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.camera-error {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+  padding: 11px;
+  border-radius: 12px;
+  background: rgba(229, 57, 53, 0.08);
+  color: #c62828;
+}
+
+.camera-error ion-icon {
+  flex: 0 0 auto;
+  font-size: 18px;
+}
+
+.camera-error span {
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.detail-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+@media (min-width: 700px) {
+  .camera-preview-card > img {
+    height: 340px;
+  }
+}
+.status-icon.disconnected {
+  background: rgba(229, 57, 53, 0.1);
+  color: var(--ion-color-danger);
+}
+
+.status-item.offline-status {
+  border-color: rgba(229, 57, 53, 0.15);
+  background: rgba(229, 57, 53, 0.04);
+}
+
+.status-item.offline-status strong {
+  color: #c62828;
+}
 }

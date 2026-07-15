@@ -1,20 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
 import {
   catchError,
+  map,
   Observable,
   shareReplay,
   throwError,
 } from 'rxjs';
 
+import { ApiResponse } from '../models/api-response.model';
 import { Place } from '../models/place.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PlaceService {
-  private readonly placesUrl =
-    'assets/data/places.json';
+  private readonly apiUrl =
+    'http://localhost/smart-travel-api/api/places.php';
 
   private placesRequest$?: Observable<Place[]>;
 
@@ -25,15 +28,27 @@ export class PlaceService {
   getPlaces(): Observable<Place[]> {
     if (!this.placesRequest$) {
       this.placesRequest$ = this.http
-        .get<Place[]>(this.placesUrl)
+        .get<ApiResponse<Place[]>>(this.apiUrl)
         .pipe(
+          map((response: ApiResponse<Place[]>) => {
+            if (!response.success) {
+              throw new Error(
+                response.message ||
+                'La API no pudo devolver los lugares.'
+              );
+            }
+
+            return response.data;
+          }),
+
           shareReplay({
             bufferSize: 1,
             refCount: true,
           }),
+
           catchError((error: unknown) => {
             console.error(
-              'No fue posible cargar los lugares turísticos:',
+              'No fue posible consultar la API de lugares:',
               error
             );
 
@@ -42,7 +57,7 @@ export class PlaceService {
             return throwError(
               () =>
                 new Error(
-                  'No se pudieron cargar los lugares turísticos.'
+                  'No se pudieron cargar los lugares desde la API.'
                 )
             );
           })
@@ -50,5 +65,11 @@ export class PlaceService {
     }
 
     return this.placesRequest$;
+  }
+
+  refreshPlaces(): Observable<Place[]> {
+    this.placesRequest$ = undefined;
+
+    return this.getPlaces();
   }
 }
