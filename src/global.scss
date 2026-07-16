@@ -34,7 +34,7 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+
 
 @import "leaflet/dist/leaflet.css";
 
@@ -107,4 +107,93 @@
 .leaflet-popup-content {
   width: auto !important;
   margin: 0 !important;
+}
+
+/* =========================================================
+   SMART TRAVEL RD — AJUSTES GLOBALES
+   ========================================================= */
+
+html,
+body,
+ion-app {
+  background: var(--smart-travel-background);
+  color: var(--smart-travel-text);
+}
+
+body {
+  margin: 0;
+}
+
+/* Respeta las áreas seguras del teléfono */
+:root {
+  --smart-travel-tab-height: 68px;
+  --smart-travel-bottom-space:
+    calc(
+      var(--smart-travel-tab-height) +
+      env(safe-area-inset-bottom, 0px) +
+      28px
+    );
+}
+
+/* Asegura espacio para llegar hasta el final del scroll */
+ion-content::part(scroll) {
+  padding-bottom: var(--smart-travel-bottom-space);
+}
+
+/* Colores generales de formularios */
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
+}
+
+input,
+textarea,
+select {
+  color: var(--smart-travel-text);
+}
+
+/* Iconos visibles */
+ion-icon {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Popups del mapa */
+.travel-map-popup {
+  background: var(--smart-travel-surface);
+  color: var(--smart-travel-text);
+}
+
+.travel-map-popup strong {
+  color: var(--smart-travel-text);
+}
+
+.travel-map-popup small,
+.travel-map-popup p,
+.travel-map-popup__meta {
+  color: var(--smart-travel-text-secondary);
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: var(--smart-travel-surface);
+  color: var(--smart-travel-text);
+}
+
+/* Animación suave al cambiar de tema */
+body,
+ion-content,
+ion-toolbar,
+ion-tab-bar,
+ion-card,
+button,
+input,
+section,
+article {
+  transition:
+    background-color 180ms ease,
+    color 180ms ease,
+    border-color 180ms ease;
 }

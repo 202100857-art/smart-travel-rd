@@ -17,7 +17,7 @@ import { Place } from '../models/place.model';
 })
 export class PlaceService {
   private readonly apiUrl =
-    'http://localhost/smart-travel-api/api/places.php';
+    'https://generic-denial-budding.ngrok-free.dev/smart-travel-api/api/places.php';
 
   private placesRequest$?: Observable<Place[]>;
 
@@ -28,7 +28,15 @@ export class PlaceService {
   getPlaces(): Observable<Place[]> {
     if (!this.placesRequest$) {
       this.placesRequest$ = this.http
-        .get<ApiResponse<Place[]>>(this.apiUrl)
+        .get<ApiResponse<Place[]>>(
+          this.apiUrl,
+          {
+            headers: {
+              Accept: 'application/json',
+              'ngrok-skip-browser-warning': 'true',
+            },
+          }
+        )
         .pipe(
           map((response: ApiResponse<Place[]>) => {
             if (!response.success) {

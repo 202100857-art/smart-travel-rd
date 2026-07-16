@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "105363717459",
+    "project_id": "smart-travel-rd-7e5ac",
+    "storage_bucket": "smart-travel-rd-7e5ac.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105363717459:android:0efa938fb54583147a75a6",
+        "android_client_info": {
+          "package_name": "com.smarttravelrd.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "105363717459-k4co4vvv16knktr07638esfofaot9apv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smarttravelrd.app",
+            "certificate_hash": "c1d37f6fd36fd2394900ae0a8efb7fdf50fd979c"
+          }
+        },
+        {
+          "client_id": "105363717459-v4b8cs79gluf419j8nu6uorncgddskvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXSlmsWo2Xp9Bhl17sngdY5ufPVl-7rmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "105363717459-v4b8cs79gluf419j8nu6uorncgddskvq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

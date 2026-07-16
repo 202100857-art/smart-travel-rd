@@ -1,5 +1,4 @@
 :root {
-  /* Color principal: azul viaje */
   --ion-color-primary: #1565c0;
   --ion-color-primary-rgb: 21, 101, 192;
   --ion-color-primary-contrast: #ffffff;
@@ -7,7 +6,6 @@
   --ion-color-primary-shade: #1259a9;
   --ion-color-primary-tint: #2c74c6;
 
-  /* Color secundario: turquesa */
   --ion-color-secondary: #26c6da;
   --ion-color-secondary-rgb: 38, 198, 218;
   --ion-color-secondary-contrast: #ffffff;
@@ -15,7 +13,6 @@
   --ion-color-secondary-shade: #21aec0;
   --ion-color-secondary-tint: #3ccce0;
 
-  /* Color de éxito */
   --ion-color-success: #43a047;
   --ion-color-success-rgb: 67, 160, 71;
   --ion-color-success-contrast: #ffffff;
@@ -23,7 +20,6 @@
   --ion-color-success-shade: #3b8d3e;
   --ion-color-success-tint: #56aa59;
 
-  /* Color de advertencia */
   --ion-color-warning: #f9a825;
   --ion-color-warning-rgb: 249, 168, 37;
   --ion-color-warning-contrast: #1f2937;
@@ -31,7 +27,6 @@
   --ion-color-warning-shade: #db9421;
   --ion-color-warning-tint: #fab13b;
 
-  /* Color de error */
   --ion-color-danger: #e53935;
   --ion-color-danger-rgb: 229, 57, 53;
   --ion-color-danger-contrast: #ffffff;
@@ -39,18 +34,20 @@
   --ion-color-danger-shade: #ca322f;
   --ion-color-danger-tint: #e84d49;
 
-  /* Colores neutros de la aplicación */
+  /* Tema claro */
   --smart-travel-background: #f5f7fa;
   --smart-travel-surface: #ffffff;
+  --smart-travel-surface-secondary: #f8fafc;
   --smart-travel-text: #263238;
   --smart-travel-text-secondary: #607d8b;
   --smart-travel-border: #e5eaf0;
   --smart-travel-shadow: rgba(38, 50, 56, 0.12);
+  --smart-travel-tab-background: #ffffff;
+  --smart-travel-input-background: #ffffff;
+  --smart-travel-overlay: rgba(15, 23, 42, 0.5);
 
-  /* Configuración general de Ionic */
   --ion-background-color: var(--smart-travel-background);
   --ion-background-color-rgb: 245, 247, 250;
-
   --ion-text-color: var(--smart-travel-text);
   --ion-text-color-rgb: 38, 50, 56;
 
@@ -62,4 +59,29 @@
     Helvetica,
     Arial,
     sans-serif;
+}
+
+/* Tema oscuro seleccionado manualmente */
+html.theme-dark {
+  --smart-travel-background: #0f172a;
+  --smart-travel-surface: #172033;
+  --smart-travel-surface-secondary: #1e293b;
+  --smart-travel-text: #f1f5f9;
+  --smart-travel-text-secondary: #aebdce;
+  --smart-travel-border: #334155;
+  --smart-travel-shadow: rgba(0, 0, 0, 0.34);
+  --smart-travel-tab-background: #111827;
+  --smart-travel-input-background: #1e293b;
+  --smart-travel-overlay: rgba(0, 0, 0, 0.7);
+
+  --ion-background-color: var(--smart-travel-background);
+  --ion-background-color-rgb: 15, 23, 42;
+  --ion-text-color: var(--smart-travel-text);
+  --ion-text-color-rgb: 241, 245, 249;
+  color-scheme: dark;
+}
+
+/* Tema claro seleccionado manualmente */
+html.theme-light {
+  color-scheme: light;
 }

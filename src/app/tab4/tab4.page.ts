@@ -1,6 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NetworkService } from '../services/network';
+import {  QrScanResult,  QrScannerService,} from '../services/qr-scanner';
+import {  AudioGuide,  AudioGuideService,} from '../services/audio-guide';
+import { CameraService } from '../services/camera';
+
 
 import {
   IonContent,
@@ -10,7 +14,6 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 
-import { CameraService } from '../services/camera';
 
 interface TravelTool {
   id: string;
@@ -39,68 +42,71 @@ interface TravelTool {
 export class Tab4Page {
   selectedTool: TravelTool | null = null;
 
-  audioPlaying = false;
-
+  
   toastOpen = false;
   toastMessage = '';
 
   readonly tools: TravelTool[] = [
-    {
-      id: 'camera',
-      title: 'Cámara',
-      description:
-        'Captura documentos, comprobantes y recuerdos del viaje.',
-      icon: 'camera-outline',
-      colorClass: 'camera-tool',
-      status: 'Funcional',
-      statusClass: 'available',
-    },
-    {
-      id: 'qr',
-      title: 'Escáner QR',
-      description:
-        'Lee códigos de boletos, reservas y entradas turísticas.',
-      icon: 'qr-code-outline',
-      colorClass: 'qr-tool',
-      status: 'Próximo módulo',
-      statusClass: 'demo',
-    },
-    {
-      id: 'audio',
-      title: 'Audioguía',
-      description:
-        'Escucha información sobre destinos y monumentos.',
-      icon: 'headset-outline',
-      colorClass: 'audio-tool',
-      status: 'Demo',
-      statusClass: 'demo',
-    },
-    {
-      id: 'bluetooth',
-      title: 'Bluetooth',
-      description:
-        'Detecta dispositivos cercanos compatibles con BLE.',
-      icon: 'bluetooth-outline',
-      colorClass: 'bluetooth-tool',
-      status: 'Requiere dispositivo',
-      statusClass: 'hardware',
-    },
-    {
-      id: 'nfc',
-      title: 'NFC',
-      description:
-        'Comparte información del viaje mediante acercamiento.',
-      icon: 'phone-portrait-outline',
-      colorClass: 'nfc-tool',
-      status: 'Según compatibilidad',
-      statusClass: 'hardware',
-    },
-  ];
+  {
+    id: 'camera',
+    title: 'Cámara',
+    description:
+      'Captura fotografías de destinos, documentos y recuerdos de tu viaje.',
+    icon: 'camera-outline',
+    colorClass: 'camera-tool',
+    status: 'Disponible',
+    statusClass: 'available',
+  },
+  {
+    id: 'qr',
+    title: 'Escáner QR',
+    description:
+      'Escanea códigos QR de lugares turísticos, reservas y puntos de interés.',
+    icon: 'qr-code-outline',
+    colorClass: 'qr-tool',
+    status: 'Disponible',
+    statusClass: 'available',
+  },
+  {
+    id: 'audio',
+    title: 'Audioguía',
+    description:
+      'Escucha información sobre monumentos y atractivos turísticos de República Dominicana.',
+    icon: 'headset-outline',
+    colorClass: 'audio-tool',
+    status: 'Disponible',
+    statusClass: 'available',
+  },
+  {
+    id: 'bluetooth',
+    title: 'Bluetooth',
+    description:
+      'Detecta dispositivos cercanos compatibles mediante Bluetooth Low Energy (BLE).',
+    icon: 'bluetooth-outline',
+    colorClass: 'bluetooth-tool',
+    status: 'Según hardware',
+    statusClass: 'hardware',
+  },
+  {
+    id: 'nfc',
+    title: 'NFC',
+    description:
+      'Lee etiquetas inteligentes y comparte información utilizando tecnología NFC.',
+    icon: 'phone-portrait-outline',
+    colorClass: 'nfc-tool',
+    status: 'Según hardware',
+    statusClass: 'hardware',
+  },
+];
 
- constructor(
+constructor(
   public readonly cameraService: CameraService,
-  public readonly networkService: NetworkService
-) {}
+  public readonly networkService: NetworkService,
+  public readonly qrScanner: QrScannerService,
+  public readonly audioGuideService: AudioGuideService
+) {
+  void this.qrScanner.initialize();
+}
 
   selectTool(tool: TravelTool): void {
     this.selectedTool = tool;
@@ -111,32 +117,44 @@ export class Tab4Page {
     this.cameraService.clearError();
   }
 
-  async capturePhoto(): Promise<void> {
-    const photo =
-      await this.cameraService.capturePhoto();
+ async capturePhoto(): Promise<void> {
+  const photo =
+    await this.cameraService.capturePhoto();
 
-    if (photo) {
-      this.toastMessage =
-        'Fotografía capturada correctamente.';
-
-      this.toastOpen = true;
-    }
+  if (!photo) {
+    return;
   }
 
-  removePhoto(): void {
-    this.cameraService.removePhoto();
+  this.toastMessage =
+    'Fotografía capturada correctamente.';
 
-    this.toastMessage =
-      'La vista previa fue eliminada.';
+  this.toastOpen = true;
+}
 
-    this.toastOpen = true;
+async selectPhoto(): Promise<void> {
+  const photo =
+    await this.cameraService.selectPhoto();
+
+  if (!photo) {
+    return;
   }
 
-  toggleAudio(): void {
-    this.audioPlaying = !this.audioPlaying;
-  }
+  this.toastMessage =
+    'Imagen seleccionada correctamente.';
 
-  formatCaptureDate(value: string): string {
+  this.toastOpen = true;
+}
+
+removePhoto(): void {
+  this.cameraService.removePhoto();
+
+  this.toastMessage =
+    'La imagen fue eliminada.';
+
+  this.toastOpen = true;
+}
+
+formatCaptureDate(value: string): string {
   return new Intl.DateTimeFormat('es-DO', {
     day: '2-digit',
     month: 'short',
@@ -144,5 +162,160 @@ export class Tab4Page {
     hour: '2-digit',
     minute: '2-digit',
   }).format(new Date(value));
+}
+
+async scanQr(): Promise<void> {
+  const result =
+    await this.qrScanner.scanQrCode();
+
+  if (!result) {
+    return;
+  }
+
+  if (
+    result.contentType ===
+    'smart-travel-place'
+  ) {
+    this.toastMessage =
+      `Destino Smart Travel detectado: lugar ${result.placeId}.`;
+  } else if (
+    result.contentType === 'url'
+  ) {
+    this.toastMessage =
+      'Enlace QR leído correctamente.';
+  } else {
+    this.toastMessage =
+      'Código QR leído correctamente.';
+  }
+
+  this.toastOpen = true;
+}
+
+selectQrHistory(
+  result: QrScanResult
+): void {
+  this.qrScanner.selectHistoryResult(result);
+
+  this.toastMessage =
+    'Escaneo recuperado del historial.';
+
+  this.toastOpen = true;
+}
+
+clearQr(): void {
+  this.qrScanner.clearResult();
+}
+
+async clearQrHistory(): Promise<void> {
+  await this.qrScanner.clearHistory();
+
+  this.toastMessage =
+    'Historial QR eliminado.';
+
+  this.toastOpen = true;
+}
+
+async copyQr(): Promise<void> {
+  const result =
+    this.qrScanner.result();
+
+  if (!result) {
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(
+      result.value
+    );
+
+    this.toastMessage =
+      'Contenido copiado al portapapeles.';
+  } catch {
+    this.toastMessage =
+      'No fue posible copiar el contenido.';
+  }
+
+  this.toastOpen = true;
+}
+
+openQr(): void {
+  const result =
+    this.qrScanner.result();
+
+  if (
+    !result ||
+    !this.qrScanner.isUrl(result.value)
+  ) {
+    return;
+  }
+
+  window.open(
+    result.value,
+    '_blank',
+    'noopener,noreferrer'
+  );
+}
+
+openSmartTravelPlace(): void {
+  const result =
+    this.qrScanner.result();
+
+  if (
+    !result ||
+    result.placeId === null
+  ) {
+    return;
+  }
+
+  /*
+   * Por ahora abre Explorar.
+   * Más adelante podremos centrar automáticamente
+   * el mapa en el lugar detectado.
+   */
+  window.location.href = '/tabs/tab2';
+}
+
+formatQrDate(value: string): string {
+  return new Intl.DateTimeFormat(
+    'es-DO',
+    {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }
+  ).format(new Date(value));
+}
+async toggleAudioGuide(
+  guide: AudioGuide
+): Promise<void> {
+  await this.audioGuideService.toggleGuide(
+    guide
+  );
+}
+
+stopAudioGuide(): void {
+  this.audioGuideService.stop();
+}
+
+seekAudio(
+  event: Event
+): void {
+  const input =
+    event.target as HTMLInputElement;
+
+  const percentage =
+    Number(input.value);
+
+  this.audioGuideService
+    .seekToPercentage(percentage);
+}
+
+formatAudioTime(
+  seconds: number
+): string {
+  return this.audioGuideService
+    .formatTime(seconds);
 }
 }

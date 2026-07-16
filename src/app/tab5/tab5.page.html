@@ -2,13 +2,21 @@
   <ion-toolbar>
     <div class="more-header">
       <div>
-        <span class="section-label">Smart Travel RD</span>
+        <span class="section-label">
+          Smart Travel RD
+        </span>
+
         <h1>Más</h1>
+
         <p>Perfil, ajustes e información</p>
       </div>
 
       <div class="version-badge">
-        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="shield-checkmark-outline"
+        ></ion-icon>
+
         <span>Demo 1.0</span>
       </div>
     </div>
@@ -21,14 +29,24 @@
     <!-- Perfil -->
     <section class="profile-card">
       <div class="profile-avatar">
-        <span>LM</span>
+        @if (userPhoto) {
+          <img
+            [src]="userPhoto"
+            alt="Foto del usuario"
+          />
+        } @else {
+          <span>{{ userInitials }}</span>
+        }
+
         <div class="online-indicator"></div>
       </div>
 
       <div class="profile-information">
-        <span>Viajero</span>
-        <h2>Luis Marte</h2>
-        <p>República Dominicana</p>
+        <span>{{ accountProvider }}</span>
+
+        <h2>{{ userName }}</h2>
+
+        <p>{{ userEmail }}</p>
       </div>
 
       <button
@@ -42,6 +60,7 @@
         (click)="toggleProfile()"
       >
         <ion-icon
+          aria-hidden="true"
           [name]="
             profileExpanded
               ? 'chevron-up-outline'
@@ -50,32 +69,43 @@
         ></ion-icon>
       </button>
 
-      <div
-        *ngIf="profileExpanded"
-        class="profile-details"
-      >
-        <div>
-          <span>Destino favorito</span>
-          <strong>Punta Cana</strong>
-        </div>
+      @if (profileExpanded) {
+        <div class="profile-details">
+          <div>
+            <span>Proveedor</span>
+            <strong>{{ accountProvider }}</strong>
+          </div>
 
-        <div>
-          <span>Lugares guardados</span>
-          <strong>3 destinos</strong>
-        </div>
+          <div>
+            <span>Correo verificado</span>
+            <strong>
+              {{
+                authService.user()
+                  ?.emailVerified
+                  ? 'Sí'
+                  : 'Pendiente'
+              }}
+            </strong>
+          </div>
 
-        <div>
-          <span>Idioma</span>
-          <strong>Español</strong>
+          <div>
+            <span>Miembro desde</span>
+            <strong>
+              {{ accountCreatedAt }}
+            </strong>
+          </div>
         </div>
-      </div>
+      }
     </section>
 
-    <!-- Estado de la aplicación -->
+    <!-- Estado -->
     <section class="app-status">
       <div class="status-card">
         <span class="status-icon connected">
-          <ion-icon name="wifi-outline"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            name="wifi-outline"
+          ></ion-icon>
         </span>
 
         <div>
@@ -88,18 +118,103 @@
 
       <div class="status-card">
         <span class="status-icon storage">
-          <ion-icon name="server-outline"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            name="server-outline"
+          ></ion-icon>
         </span>
 
         <div>
-          <small>Almacenamiento</small>
-          <strong>Disponible</strong>
+          <small>Sesión</small>
+          <strong>Protegida</strong>
         </div>
 
         <ion-icon
+          aria-hidden="true"
           class="status-check"
           name="checkmark-circle"
         ></ion-icon>
+      </div>
+    </section>
+
+    <!-- Apariencia -->
+    <section class="appearance-section">
+      <div class="section-heading">
+        <div>
+          <span class="section-eyebrow">
+            Apariencia
+          </span>
+
+          <h2>Tema de la aplicación</h2>
+        </div>
+      </div>
+
+      <div class="appearance-card">
+        <div class="appearance-icon">
+          <ion-icon
+            aria-hidden="true"
+            [name]="
+              themeService.mode() === 'dark'
+                ? 'moon-outline'
+                : themeService.mode() === 'light'
+                  ? 'sunny-outline'
+                  : 'phone-portrait-outline'
+            "
+          ></ion-icon>
+        </div>
+
+        <div class="appearance-content">
+          <div class="appearance-title">
+            <div>
+              <strong>Modo visual</strong>
+
+              <small>
+                @switch (themeService.mode()) {
+                  @case ('system') {
+                    Sigue la configuración del teléfono
+                  }
+
+                  @case ('light') {
+                    Interfaz clara permanentemente
+                  }
+
+                  @case ('dark') {
+                    Interfaz oscura permanentemente
+                  }
+                }
+              </small>
+            </div>
+
+            <span class="appearance-status">
+              Activo
+            </span>
+          </div>
+
+          <div class="appearance-select">
+            <select
+              [ngModel]="themeService.mode()"
+              (ngModelChange)="changeTheme($event)"
+              aria-label="Seleccionar tema"
+            >
+              <option value="system">
+                Automático
+              </option>
+
+              <option value="light">
+                Claro
+              </option>
+
+              <option value="dark">
+                Oscuro
+              </option>
+            </select>
+
+            <ion-icon
+              aria-hidden="true"
+              name="chevron-down-outline"
+            ></ion-icon>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -107,7 +222,10 @@
     <section class="settings-section">
       <div class="section-heading">
         <div>
-          <span class="section-eyebrow">Personalización</span>
+          <span class="section-eyebrow">
+            Personalización
+          </span>
+
           <h2>Preferencias</h2>
         </div>
       </div>
@@ -121,11 +239,15 @@
             class="setting-icon"
             [ngClass]="option.colorClass"
           >
-            <ion-icon [name]="option.icon"></ion-icon>
+            <ion-icon
+              aria-hidden="true"
+              [name]="option.icon"
+            ></ion-icon>
           </span>
 
           <div class="setting-information">
             <strong>{{ option.title }}</strong>
+
             <p>{{ option.description }}</p>
           </div>
 
@@ -137,56 +259,232 @@
       </div>
     </section>
 
-    <!-- Opciones generales -->
+    <!-- Información y soporte -->
     <section class="options-section">
       <div class="section-heading">
         <div>
-          <span class="section-eyebrow">Aplicación</span>
+          <span class="section-eyebrow">
+            Aplicación
+          </span>
+
           <h2>Información y soporte</h2>
         </div>
       </div>
 
       <div class="options-list">
-
-        <button type="button" class="option-row">
+        <button
+          type="button"
+          class="option-row"
+          (click)="openPanel('about')"
+        >
           <span class="option-icon about-option">
-            <ion-icon name="information-circle-outline"></ion-icon>
+            <ion-icon
+              aria-hidden="true"
+              name="information-circle-outline"
+            ></ion-icon>
           </span>
 
           <div>
-            <strong>Acerca de Smart Travel RD</strong>
-            <small>Conoce el propósito de la aplicación</small>
+            <strong>
+              Acerca de Smart Travel RD
+            </strong>
+
+            <small>
+              Propósito, funciones y desarrollador
+            </small>
           </div>
 
-          <ion-icon name="chevron-forward-outline"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            name="chevron-forward-outline"
+          ></ion-icon>
         </button>
 
-        <button type="button" class="option-row">
+        <button
+          type="button"
+          class="option-row"
+          (click)="openPanel('permissions')"
+        >
           <span class="option-icon permissions-option">
-            <ion-icon name="key-outline"></ion-icon>
+            <ion-icon
+              aria-hidden="true"
+              name="key-outline"
+            ></ion-icon>
           </span>
 
           <div>
-            <strong>Permisos del dispositivo</strong>
-            <small>Cámara, GPS, Bluetooth y NFC</small>
+            <strong>
+              Permisos del dispositivo
+            </strong>
+
+            <small>
+              Cámara, GPS, Internet, Bluetooth y NFC
+            </small>
           </div>
 
-          <ion-icon name="chevron-forward-outline"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            name="chevron-forward-outline"
+          ></ion-icon>
         </button>
 
-        <button type="button" class="option-row">
+        <button
+          type="button"
+          class="option-row"
+          (click)="openPanel('help')"
+        >
           <span class="option-icon help-option">
-            <ion-icon name="help-circle-outline"></ion-icon>
+            <ion-icon
+              aria-hidden="true"
+              name="help-circle-outline"
+            ></ion-icon>
           </span>
 
           <div>
-            <strong>Ayuda</strong>
-            <small>Guía básica para usar la aplicación</small>
+            <strong>Centro de ayuda</strong>
+
+            <small>
+              Guía básica y preguntas frecuentes
+            </small>
           </div>
 
-          <ion-icon name="chevron-forward-outline"></ion-icon>
+          <ion-icon
+            aria-hidden="true"
+            name="chevron-forward-outline"
+          ></ion-icon>
         </button>
 
+        <button
+          type="button"
+          class="option-row"
+          (click)="openPanel('contact')"
+        >
+          <span class="option-icon contact-option">
+            <ion-icon
+              aria-hidden="true"
+              name="mail-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+            <strong>Contacto</strong>
+
+            <small>
+              Comunícate con el soporte
+            </small>
+          </div>
+
+          <ion-icon
+            aria-hidden="true"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </button>
+
+        <button
+          type="button"
+          class="option-row"
+          (click)="openPanel('report')"
+        >
+          <span class="option-icon report-option">
+            <ion-icon
+              aria-hidden="true"
+              name="alert-circle-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+            <strong>Reportar un problema</strong>
+
+            <small>
+              Registra una incidencia de la aplicación
+            </small>
+          </div>
+
+          <ion-icon
+            aria-hidden="true"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </button>
+
+        <button
+          type="button"
+          class="option-row"
+          (click)="openPanel('privacy')"
+        >
+          <span class="option-icon privacy-option">
+            <ion-icon
+              aria-hidden="true"
+              name="shield-checkmark-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+            <strong>
+              Política de privacidad
+            </strong>
+
+            <small>
+              Uso responsable de datos y permisos
+            </small>
+          </div>
+
+          <ion-icon
+            aria-hidden="true"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </button>
+
+        <button
+          type="button"
+          class="option-row"
+          (click)="openPanel('terms')"
+        >
+          <span class="option-icon terms-option">
+            <ion-icon
+              aria-hidden="true"
+              name="document-text-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+            <strong>Términos de uso</strong>
+
+            <small>
+              Condiciones de esta demostración
+            </small>
+          </div>
+
+          <ion-icon
+            aria-hidden="true"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </button>
+
+        <button
+          type="button"
+          class="option-row logout-row"
+          (click)="openPanel('logout')"
+        >
+          <span class="option-icon logout-option">
+            <ion-icon
+              aria-hidden="true"
+              name="log-out-outline"
+            ></ion-icon>
+          </span>
+
+          <div>
+            <strong>Cerrar sesión</strong>
+
+            <small>
+              Salir de tu cuenta de Smart Travel RD
+            </small>
+          </div>
+
+          <ion-icon
+            aria-hidden="true"
+            name="chevron-forward-outline"
+          ></ion-icon>
+        </button>
       </div>
     </section>
 
@@ -194,11 +492,16 @@
     <section class="technical-card">
       <div class="technical-header">
         <div>
-          <span class="section-eyebrow">Información técnica</span>
+          <span class="section-eyebrow">
+            Información técnica
+          </span>
+
           <h2>Estado del proyecto</h2>
         </div>
 
-        <span class="demo-badge">Demo académica</span>
+        <span class="demo-badge">
+          Demo académica
+        </span>
       </div>
 
       <div class="technical-grid">
@@ -213,8 +516,8 @@
         </div>
 
         <div>
-          <span>Plataforma</span>
-          <strong>Web / Android</strong>
+          <span>Autenticación</span>
+          <strong>Firebase</strong>
         </div>
 
         <div>
@@ -227,19 +530,439 @@
     <!-- Descripción -->
     <section class="about-project">
       <div class="about-icon">
-        <ion-icon name="airplane-outline"></ion-icon>
+        <ion-icon
+          aria-hidden="true"
+          name="airplane-outline"
+        ></ion-icon>
       </div>
 
       <div>
         <strong>Smart Travel RD</strong>
 
         <p>
-          Aplicación móvil demostrativa diseñada para integrar navegación,
-          conectividad, geolocalización, almacenamiento, multimedia,
-          cámara y servicios web dentro de una solución orientada al turismo.
+          Aplicación móvil académica orientada al turismo,
+          con mapas, geolocalización, cámara, QR,
+          audioguías, favoritos y servicios web.
         </p>
       </div>
     </section>
 
+    <!-- Panel inferior -->
+    @if (activePanel) {
+      <section
+        class="information-overlay"
+        (click)="closePanel()"
+      >
+        <article
+          class="information-sheet"
+          (click)="$event.stopPropagation()"
+        >
+          <div class="sheet-handle"></div>
+
+          <button
+            type="button"
+            class="sheet-close"
+            aria-label="Cerrar panel"
+            (click)="closePanel()"
+          >
+            <ion-icon
+              aria-hidden="true"
+              name="close-outline"
+            ></ion-icon>
+          </button>
+
+          @switch (activePanel) {
+            @case ('about') {
+              <div class="sheet-heading">
+                <span class="sheet-icon about-option">
+                  <ion-icon
+                    name="airplane-outline"
+                  ></ion-icon>
+                </span>
+
+                <div>
+                  <span>Acerca de</span>
+                  <h2>Smart Travel RD</h2>
+                  <p>Versión 1.0.0</p>
+                </div>
+              </div>
+
+              <div class="sheet-content">
+                <p>
+                  Smart Travel RD es una aplicación móvil
+                  desarrollada como proyecto académico para
+                  la asignatura Programación de Dispositivos
+                  Móviles.
+                </p>
+
+                <h3>Funciones principales</h3>
+
+                <ul class="feature-list">
+                  <li>Exploración de destinos turísticos.</li>
+                  <li>Mapa y geolocalización.</li>
+                  <li>Cámara y lector de códigos QR.</li>
+                  <li>Audioguías en línea.</li>
+                  <li>Favoritos y modo visual configurable.</li>
+                  <li>Autenticación mediante Firebase.</li>
+                </ul>
+
+                <div class="developer-card">
+                  <span>Desarrollado por</span>
+                  <strong>
+                    Luis Alfonso Marte Del Villar
+                  </strong>
+                  <small>
+                    Universidad Abierta para Adultos — 2026
+                  </small>
+                </div>
+              </div>
+            }
+
+            @case ('permissions') {
+              <div class="sheet-heading">
+                <span class="sheet-icon permissions-option">
+                  <ion-icon name="key-outline"></ion-icon>
+                </span>
+
+                <div>
+                  <span>Dispositivo</span>
+                  <h2>Permisos utilizados</h2>
+                  <p>Controlados por el usuario</p>
+                </div>
+              </div>
+
+              <div class="permission-list">
+                <article>
+                  <ion-icon name="location-outline"></ion-icon>
+                  <div>
+                    <strong>Ubicación</strong>
+                    <p>
+                      Permite mostrar la posición actual
+                      y centrar el mapa.
+                    </p>
+                  </div>
+                </article>
+
+                <article>
+                  <ion-icon name="camera-outline"></ion-icon>
+                  <div>
+                    <strong>Cámara</strong>
+                    <p>
+                      Permite capturar fotografías y leer
+                      códigos QR.
+                    </p>
+                  </div>
+                </article>
+
+                <article>
+                  <ion-icon name="wifi-outline"></ion-icon>
+                  <div>
+                    <strong>Internet</strong>
+                    <p>
+                      Permite consultar la API turística
+                      y reproducir audioguías.
+                    </p>
+                  </div>
+                </article>
+
+                <article>
+                  <ion-icon name="bluetooth-outline"></ion-icon>
+                  <div>
+                    <strong>Bluetooth y NFC</strong>
+                    <p>
+                      Su disponibilidad depende del hardware
+                      y de futuras integraciones.
+                    </p>
+                  </div>
+                </article>
+              </div>
+            }
+
+            @case ('help') {
+              <div class="sheet-heading">
+                <span class="sheet-icon help-option">
+                  <ion-icon
+                    name="help-circle-outline"
+                  ></ion-icon>
+                </span>
+
+                <div>
+                  <span>Soporte</span>
+                  <h2>Centro de ayuda</h2>
+                  <p>Preguntas frecuentes</p>
+                </div>
+              </div>
+
+              <div class="faq-list">
+                <details open>
+                  <summary>
+                    ¿Cómo buscar un destino?
+                  </summary>
+                  <p>
+                    Abre Explorar, escribe el lugar en el
+                    buscador o selecciona una categoría.
+                  </p>
+                </details>
+
+                <details>
+                  <summary>
+                    ¿Cómo utilizar el mapa?
+                  </summary>
+                  <p>
+                    Pulsa Ubicarme para centrar el mapa en
+                    tu posición y permite el acceso al GPS.
+                  </p>
+                </details>
+
+                <details>
+                  <summary>
+                    ¿Cómo funciona la cámara?
+                  </summary>
+                  <p>
+                    En Herramientas selecciona Cámara y
+                    elige tomar una fotografía o abrir la
+                    galería.
+                  </p>
+                </details>
+
+                <details>
+                  <summary>
+                    ¿Cómo escanear un QR?
+                  </summary>
+                  <p>
+                    Abre Escáner QR, concede el permiso de
+                    cámara y apunta al código.
+                  </p>
+                </details>
+
+                <details>
+                  <summary>
+                    ¿Cómo cambio el tema?
+                  </summary>
+                  <p>
+                    En esta pestaña selecciona Automático,
+                    Claro u Oscuro.
+                  </p>
+                </details>
+              </div>
+            }
+
+            @case ('contact') {
+              <div class="sheet-heading">
+                <span class="sheet-icon contact-option">
+                  <ion-icon name="mail-outline"></ion-icon>
+                </span>
+
+                <div>
+                  <span>Soporte</span>
+                  <h2>Contacto</h2>
+                  <p>Atención de la demostración</p>
+                </div>
+              </div>
+
+              <div class="contact-card">
+                <span>Correo electrónico</span>
+                <strong>
+                  soporte@smarttravelrd.com
+                </strong>
+                <small>
+                  Horario: lunes a viernes,
+                  8:00 a. m. – 5:00 p. m.
+                </small>
+              </div>
+
+              <div class="sheet-actions">
+                <button
+                  type="button"
+                  class="sheet-primary-button"
+                  (click)="sendSupportEmail()"
+                >
+                  <ion-icon name="mail-outline"></ion-icon>
+                  Enviar correo
+                </button>
+
+                <button
+                  type="button"
+                  class="sheet-secondary-button"
+                  (click)="copySupportEmail()"
+                >
+                  <ion-icon name="copy-outline"></ion-icon>
+                  Copiar
+                </button>
+              </div>
+            }
+
+            @case ('report') {
+              <div class="sheet-heading">
+                <span class="sheet-icon report-option">
+                  <ion-icon
+                    name="alert-circle-outline"
+                  ></ion-icon>
+                </span>
+
+                <div>
+                  <span>Soporte</span>
+                  <h2>Reportar un problema</h2>
+                  <p>Describe la incidencia encontrada</p>
+                </div>
+              </div>
+
+              <div class="report-form">
+                <label>
+                  <span>Asunto</span>
+                  <input
+                    type="text"
+                    [(ngModel)]="reportSubject"
+                    placeholder="Ej. El mapa no carga"
+                  />
+                </label>
+
+                <label>
+                  <span>Descripción</span>
+                  <textarea
+                    [(ngModel)]="reportDescription"
+                    rows="5"
+                    placeholder="Explica qué ocurrió y en qué sección."
+                  ></textarea>
+                </label>
+
+                <button
+                  type="button"
+                  class="sheet-primary-button"
+                  (click)="submitReport()"
+                >
+                  <ion-icon
+                    name="paper-plane-outline"
+                  ></ion-icon>
+                  Enviar reporte
+                </button>
+              </div>
+            }
+
+            @case ('privacy') {
+              <div class="sheet-heading">
+                <span class="sheet-icon privacy-option">
+                  <ion-icon
+                    name="shield-checkmark-outline"
+                  ></ion-icon>
+                </span>
+
+                <div>
+                  <span>Seguridad</span>
+                  <h2>Política de privacidad</h2>
+                  <p>Resumen para la demostración</p>
+                </div>
+              </div>
+
+              <div class="sheet-content">
+                <p>
+                  Smart Travel RD utiliza la ubicación,
+                  cámara y conexión a Internet únicamente
+                  cuando una función lo requiere y el
+                  usuario concede el permiso.
+                </p>
+
+                <p>
+                  La autenticación se gestiona mediante
+                  Firebase Authentication. La aplicación no
+                  almacena contraseñas directamente.
+                </p>
+
+                <p>
+                  Esta versión tiene fines académicos y no
+                  comercializa ni comparte información
+                  personal con terceros.
+                </p>
+              </div>
+            }
+
+            @case ('terms') {
+              <div class="sheet-heading">
+                <span class="sheet-icon terms-option">
+                  <ion-icon
+                    name="document-text-outline"
+                  ></ion-icon>
+                </span>
+
+                <div>
+                  <span>Aplicación</span>
+                  <h2>Términos de uso</h2>
+                  <p>Condiciones de la demostración</p>
+                </div>
+              </div>
+
+              <div class="sheet-content">
+                <p>
+                  Smart Travel RD es un prototipo académico
+                  destinado a demostrar tecnologías de
+                  desarrollo móvil.
+                </p>
+
+                <p>
+                  La información turística puede utilizarse
+                  como referencia, pero no sustituye fuentes
+                  oficiales ni servicios profesionales.
+                </p>
+
+                <p>
+                  El usuario debe utilizar responsablemente
+                  la cámara, el GPS, el lector QR y las demás
+                  funciones del dispositivo.
+                </p>
+              </div>
+            }
+
+            @case ('logout') {
+              <div class="logout-confirmation">
+                <span class="logout-confirmation-icon">
+                  <ion-icon
+                    name="log-out-outline"
+                  ></ion-icon>
+                </span>
+
+                <h2>¿Cerrar sesión?</h2>
+
+                <p>
+                  Tendrás que iniciar sesión nuevamente
+                  para acceder a Smart Travel RD.
+                </p>
+
+                <div class="sheet-actions">
+                  <button
+                    type="button"
+                    class="sheet-secondary-button"
+                    (click)="closePanel()"
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="button"
+                    class="logout-button"
+                    [disabled]="authService.loading()"
+                    (click)="confirmLogout()"
+                  >
+                    {{
+                      authService.loading()
+                        ? 'Cerrando...'
+                        : 'Cerrar sesión'
+                    }}
+                  </button>
+                </div>
+              </div>
+            }
+          }
+        </article>
+      </section>
+    }
+
   </main>
+
+  <ion-toast
+    [isOpen]="toastOpen"
+    [message]="toastMessage"
+    [duration]="2200"
+    position="bottom"
+    (didDismiss)="toastOpen = false"
+  ></ion-toast>
 </ion-content>

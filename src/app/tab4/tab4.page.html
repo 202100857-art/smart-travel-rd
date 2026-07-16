@@ -2,8 +2,12 @@
   <ion-toolbar>
     <div class="tools-header">
       <div>
-        <span class="section-label">Smart Travel RD</span>
+        <span class="section-label">
+          Smart Travel RD
+        </span>
+
         <h1>Herramientas</h1>
+
         <p>Recursos útiles para tu viaje</p>
       </div>
 
@@ -22,62 +26,72 @@
 <ion-content [fullscreen]="true">
   <main class="tools-container">
 
+    <!-- Presentación -->
     <section class="tools-hero">
       <div class="hero-content">
         <span>Centro de recursos</span>
 
-        <h2>Todo lo que necesitas durante tu viaje</h2>
+        <h2>
+          Todo lo que necesitas durante tu viaje
+        </h2>
 
         <p>
-          Accede a las funciones del dispositivo desde un solo lugar.
+          Accede a las funciones del dispositivo
+          desde un solo lugar.
         </p>
       </div>
 
-      <div class="hero-icon" aria-hidden="true">
+      <div
+        class="hero-icon"
+        aria-hidden="true"
+      >
         🧳
       </div>
     </section>
 
+    <!-- Estado del dispositivo -->
     <section class="device-status">
-     <div
-  class="status-item"
-  [class.offline-status]="
-    networkService.initialized() &&
-    !networkService.connected()
-  "
->
-  <span
-    class="status-icon"
-    [class.success]="networkService.connected()"
-    [class.disconnected]="
-      networkService.initialized() &&
-      !networkService.connected()
-    "
-  >
-    <ion-icon
-      aria-hidden="true"
-      [name]="
-        networkService.connected()
-          ? 'wifi-outline'
-          : 'cloud-offline-outline'
-      "
-    ></ion-icon>
-  </span>
+      <div
+        class="status-item"
+        [class.offline-status]="
+          networkService.initialized() &&
+          !networkService.connected()
+        "
+      >
+        <span
+          class="status-icon"
+          [class.success]="
+            networkService.connected()
+          "
+          [class.disconnected]="
+            networkService.initialized() &&
+            !networkService.connected()
+          "
+        >
+          <ion-icon
+            aria-hidden="true"
+            [name]="
+              networkService.connected()
+                ? 'wifi-outline'
+                : 'cloud-offline-outline'
+            "
+          ></ion-icon>
+        </span>
 
-  <div>
-    <strong>Conectividad</strong>
+        <div>
+          <strong>Conectividad</strong>
 
-    <small>
-      @if (!networkService.initialized()) {
-        Verificando red
-      } @else if (networkService.connected()) {
-        {{ networkService.connectionLabel }}
-      } @else {
-        Sin conexión
-      }
-    </small>
-  </div>
-</div>
+          <small>
+            @if (!networkService.initialized()) {
+              Verificando red
+            } @else if (networkService.connected()) {
+              {{ networkService.connectionLabel }}
+            } @else {
+              Sin conexión
+            }
+          </small>
+        </div>
+      </div>
 
       <div class="status-item">
         <span class="status-icon primary">
@@ -94,6 +108,7 @@
       </div>
     </section>
 
+    <!-- Herramientas -->
     <section class="tools-section">
       <div class="section-heading">
         <div>
@@ -104,7 +119,9 @@
           <h2>Selecciona una herramienta</h2>
         </div>
 
-        <span>{{ tools.length }} disponibles</span>
+        <span>
+          {{ tools.length }} disponibles
+        </span>
       </div>
 
       <div class="tools-grid">
@@ -147,7 +164,7 @@
       </div>
     </section>
 
-    <!-- Vista previa de la última fotografía -->
+    <!-- Última fotografía -->
     @if (cameraService.photo()) {
       <section class="camera-preview-card">
         <div class="preview-heading">
@@ -160,13 +177,18 @@
           </div>
 
           <span class="captured-badge">
-            Capturada
+            {{
+              cameraService.photo()!.source ===
+              'camera'
+                ? 'Cámara'
+                : 'Galería'
+            }}
           </span>
         </div>
 
         <img
           [src]="cameraService.photo()!.webPath"
-          alt="Fotografía capturada durante el viaje"
+          alt="Fotografía seleccionada para el viaje"
         />
 
         <div class="photo-metadata">
@@ -176,7 +198,10 @@
               name="image-outline"
             ></ion-icon>
 
-            {{ cameraService.photo()!.format | uppercase }}
+            {{
+              cameraService.photo()!.format
+                | uppercase
+            }}
           </span>
 
           <span>
@@ -205,7 +230,7 @@
               name="camera-reverse-outline"
             ></ion-icon>
 
-            Repetir foto
+            Tomar otra
           </button>
 
           <button
@@ -224,41 +249,170 @@
       </section>
     }
 
-    <section class="audio-player">
-      <div class="audio-cover">
-        <ion-icon
-          aria-hidden="true"
-          name="musical-notes-outline"
-        ></ion-icon>
-      </div>
-
-      <div class="audio-information">
-        <span>Audioguía destacada</span>
-        <strong>Historia de la Zona Colonial</strong>
-        <small>Duración: 03:45</small>
-
-        <div class="progress-track">
-          <span [class.playing]="audioPlaying"></span>
+    <!-- Audioguía -->
+    <section
+      *ngFor="
+        let guide of audioGuideService.guides
+      "
+      class="audio-guide-card"
+    >
+      <div class="audio-guide-header">
+        <div class="audio-cover">
+          <ion-icon
+            aria-hidden="true"
+            name="headset-outline"
+          ></ion-icon>
         </div>
+
+        <div class="audio-guide-information">
+          <span>Audioguía turística</span>
+
+          <h3>{{ guide.title }}</h3>
+
+          <p>{{ guide.destination }}</p>
+        </div>
+
+        <span class="online-audio-badge">
+          En línea
+        </span>
       </div>
 
-      <button
-        type="button"
-        class="play-button"
-        [attr.aria-label]="
-          audioPlaying
-            ? 'Pausar audioguía'
-            : 'Reproducir audioguía'
-        "
-        (click)="toggleAudio()"
-      >
-        <ion-icon
-          aria-hidden="true"
-          [name]="audioPlaying ? 'pause' : 'play'"
-        ></ion-icon>
-      </button>
+      <p class="audio-guide-description">
+        {{ guide.description }}
+      </p>
+
+      @if (
+        audioGuideService.error() &&
+        audioGuideService.currentGuide()?.id ===
+          guide.id
+      ) {
+        <div class="audio-error">
+          <ion-icon
+            aria-hidden="true"
+            name="alert-circle-outline"
+          ></ion-icon>
+
+          <span>
+            {{ audioGuideService.error() }}
+          </span>
+        </div>
+      }
+
+      <div class="audio-timeline">
+        <span>
+          {{
+            formatAudioTime(
+              audioGuideService
+                .currentGuide()?.id === guide.id
+                ? audioGuideService.currentTime()
+                : 0
+            )
+          }}
+        </span>
+
+        <span>
+          {{
+            formatAudioTime(
+              audioGuideService
+                .currentGuide()?.id === guide.id
+                ? audioGuideService.duration()
+                : 0
+            )
+          }}
+        </span>
+      </div>
+
+      <div class="audio-slider-wrapper">
+        <input
+          type="range"
+          class="audio-slider"
+          min="0"
+          max="100"
+          step="0.1"
+          [value]="
+            audioGuideService
+              .currentGuide()?.id === guide.id
+              ? audioGuideService
+                  .progressPercentage
+              : 0
+          "
+          [disabled]="
+            audioGuideService
+              .currentGuide()?.id !== guide.id ||
+            audioGuideService.duration() <= 0
+          "
+          aria-label="Progreso de la audioguía"
+          (input)="seekAudio($event)"
+        />
+      </div>
+
+      <div class="audio-player-controls">
+        <button
+          type="button"
+          class="audio-control-button play-control"
+          [disabled]="
+            audioGuideService.loading() &&
+            audioGuideService
+              .currentGuide()?.id === guide.id
+          "
+          (click)="toggleAudioGuide(guide)"
+        >
+          <span class="control-icon">
+            <ion-icon
+              aria-hidden="true"
+              [name]="
+                audioGuideService.loading() &&
+                audioGuideService
+                  .currentGuide()?.id === guide.id
+                  ? 'hourglass-outline'
+                  : audioGuideService.playing() &&
+                      audioGuideService
+                        .currentGuide()?.id ===
+                        guide.id
+                    ? 'pause'
+                    : 'play'
+              "
+            ></ion-icon>
+          </span>
+
+          <span>
+            {{
+              audioGuideService.loading() &&
+              audioGuideService
+                .currentGuide()?.id === guide.id
+                ? 'Cargando'
+                : audioGuideService.playing() &&
+                    audioGuideService
+                      .currentGuide()?.id ===
+                      guide.id
+                  ? 'Pausar'
+                  : 'Reproducir'
+            }}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="audio-control-button stop-control"
+          [disabled]="
+            audioGuideService
+              .currentGuide()?.id !== guide.id
+          "
+          (click)="stopAudioGuide()"
+        >
+          <span class="control-icon">
+            <ion-icon
+              aria-hidden="true"
+              name="stop"
+            ></ion-icon>
+          </span>
+
+          <span>Detener</span>
+        </button>
+      </div>
     </section>
 
+    <!-- Compatibilidad -->
     <section class="compatibility-card">
       <div class="compatibility-icon">
         <ion-icon
@@ -268,16 +422,19 @@
       </div>
 
       <div>
-        <strong>Compatibilidad del dispositivo</strong>
+        <strong>
+          Compatibilidad del dispositivo
+        </strong>
 
         <p>
-          Cámara, Bluetooth y NFC dependen del hardware, del sistema
-          operativo y de los permisos concedidos por el usuario.
+          Cámara, Bluetooth y NFC dependen del
+          hardware, del sistema operativo y de los
+          permisos concedidos por el usuario.
         </p>
       </div>
     </section>
 
-    <!-- Panel inferior -->
+    <!-- Panel de herramienta -->
     <section
       *ngIf="selectedTool"
       class="tool-detail-overlay"
@@ -320,8 +477,22 @@
 
         <p>{{ selectedTool.description }}</p>
 
+        <!-- Cámara -->
         @if (selectedTool.id === 'camera') {
           <div class="camera-detail-content">
+
+            <div class="camera-introduction">
+              <ion-icon
+                aria-hidden="true"
+                name="images-outline"
+              ></ion-icon>
+
+              <p>
+                Toma una fotografía con la cámara
+                del teléfono o selecciona una imagen
+                guardada en la galería.
+              </p>
+            </div>
 
             @if (cameraService.error()) {
               <div class="camera-error">
@@ -330,52 +501,470 @@
                   name="alert-circle-outline"
                 ></ion-icon>
 
-                <span>{{ cameraService.error() }}</span>
+                <span>
+                  {{ cameraService.error() }}
+                </span>
               </div>
             }
 
             @if (cameraService.photo()) {
-              <img
-                class="detail-photo-preview"
-                [src]="cameraService.photo()!.webPath"
-                alt="Vista previa de la fotografía"
-              />
+              <div class="camera-result">
+                <div class="camera-photo-wrapper">
+                  <img
+                    [src]="
+                      cameraService.photo()!.webPath
+                    "
+                    alt="Vista previa de la fotografía"
+                  />
+
+                  <span class="camera-source-badge">
+                    {{
+                      cameraService.photo()!.source ===
+                      'camera'
+                        ? 'Cámara'
+                        : 'Galería'
+                    }}
+                  </span>
+                </div>
+
+                <div class="camera-result-meta">
+                  <span>
+                    <ion-icon
+                      aria-hidden="true"
+                      name="image-outline"
+                    ></ion-icon>
+
+                    {{
+                      cameraService.photo()!.format
+                        | uppercase
+                    }}
+                  </span>
+
+                  <span>
+                    <ion-icon
+                      aria-hidden="true"
+                      name="time-outline"
+                    ></ion-icon>
+
+                    {{
+                      formatCaptureDate(
+                        cameraService
+                          .photo()!
+                          .capturedAt
+                      )
+                    }}
+                  </span>
+                </div>
+              </div>
+            }
+
+            <div class="camera-actions">
+              <button
+                type="button"
+                class="camera-action primary"
+                [disabled]="cameraService.loading()"
+                (click)="capturePhoto()"
+              >
+                <span class="camera-action-icon">
+                  <ion-icon
+                    aria-hidden="true"
+                    [name]="
+                      cameraService.loading()
+                        ? 'hourglass-outline'
+                        : 'camera-outline'
+                    "
+                  ></ion-icon>
+                </span>
+
+                <div>
+                  <strong>
+                    {{
+                      cameraService.loading()
+                        ? 'Abriendo cámara...'
+                        : 'Tomar fotografía'
+                    }}
+                  </strong>
+
+                  <small>
+                    Usar la cámara del dispositivo
+                  </small>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                class="camera-action secondary"
+                [disabled]="cameraService.loading()"
+                (click)="selectPhoto()"
+              >
+                <span class="camera-action-icon">
+                  <ion-icon
+                    aria-hidden="true"
+                    name="images-outline"
+                  ></ion-icon>
+                </span>
+
+                <div>
+                  <strong>
+                    Seleccionar imagen
+                  </strong>
+
+                  <small>
+                    Elegir desde la galería
+                  </small>
+                </div>
+              </button>
+            </div>
+
+            @if (cameraService.photo()) {
+              <button
+                type="button"
+                class="remove-camera-photo"
+                (click)="removePhoto()"
+              >
+                <ion-icon
+                  aria-hidden="true"
+                  name="trash-outline"
+                ></ion-icon>
+
+                Eliminar imagen
+              </button>
+            }
+
+          </div>
+        }
+
+        <!-- QR -->
+        @else if (selectedTool.id === 'qr') {
+          <div class="qr-detail">
+
+            @if (qrScanner.error()) {
+              <div class="camera-error">
+                <ion-icon
+                  aria-hidden="true"
+                  name="alert-circle-outline"
+                ></ion-icon>
+
+                <span>
+                  {{ qrScanner.error() }}
+                </span>
+              </div>
             }
 
             <button
               type="button"
               class="detail-action"
-              [disabled]="cameraService.loading()"
-              (click)="capturePhoto()"
+              [disabled]="qrScanner.loading()"
+              (click)="scanQr()"
             >
               <ion-icon
                 aria-hidden="true"
                 [name]="
-                  cameraService.loading()
+                  qrScanner.loading()
                     ? 'hourglass-outline'
-                    : 'camera-outline'
+                    : 'qr-code-outline'
                 "
               ></ion-icon>
 
               {{
-                cameraService.loading()
-                  ? 'Abriendo cámara...'
-                  : cameraService.photo()
-                    ? 'Tomar otra fotografía'
-                    : 'Abrir cámara'
+                qrScanner.loading()
+                  ? 'Abriendo escáner...'
+                  : 'Escanear código QR'
               }}
             </button>
+
+            @if (qrScanner.result()) {
+              <section class="qr-result">
+                <div class="qr-result-heading">
+                  <span
+                    class="qr-result-icon"
+                    [class.destination-result]="
+                      qrScanner.result()!
+                        .contentType ===
+                      'smart-travel-place'
+                    "
+                  >
+                    <ion-icon
+                      aria-hidden="true"
+                      [name]="
+                        qrScanner.result()!
+                          .contentType ===
+                        'smart-travel-place'
+                          ? 'location-outline'
+                          : qrScanner.result()!
+                                .contentType ===
+                              'url'
+                            ? 'link-outline'
+                            : 'document-text-outline'
+                      "
+                    ></ion-icon>
+                  </span>
+
+                  <div>
+                    <span>
+                      Resultado detectado
+                    </span>
+
+                    <h3>
+                      @if (
+                        qrScanner.result()!
+                          .contentType ===
+                        'smart-travel-place'
+                      ) {
+                        Destino Smart Travel RD
+                      } @else if (
+                        qrScanner.result()!
+                          .contentType === 'url'
+                      ) {
+                        Enlace web
+                      } @else {
+                        Contenido de texto
+                      }
+                    </h3>
+                  </div>
+                </div>
+
+                @if (
+                  qrScanner.result()!
+                    .contentType ===
+                  'smart-travel-place'
+                ) {
+                  <div class="destination-detected">
+                    <span>
+                      Lugar identificado
+                    </span>
+
+                    <strong>
+                      Destino número
+                      {{
+                        qrScanner.result()!
+                          .placeId
+                      }}
+                    </strong>
+
+                    <p>
+                      El código pertenece al
+                      ecosistema de Smart Travel RD.
+                    </p>
+                  </div>
+                }
+
+                <div class="qr-value">
+                  {{ qrScanner.result()!.value }}
+                </div>
+
+                <div class="qr-metadata">
+                  <span>
+                    <ion-icon
+                      aria-hidden="true"
+                      name="qr-code-outline"
+                    ></ion-icon>
+
+                    {{
+                      qrScanner.result()!.format
+                    }}
+                  </span>
+
+                  <span>
+                    <ion-icon
+                      aria-hidden="true"
+                      name="time-outline"
+                    ></ion-icon>
+
+                    {{
+                      formatQrDate(
+                        qrScanner.result()!
+                          .scannedAt
+                      )
+                    }}
+                  </span>
+                </div>
+
+                <div class="qr-actions">
+                  <button
+                    type="button"
+                    (click)="copyQr()"
+                  >
+                    <ion-icon
+                      aria-hidden="true"
+                      name="copy-outline"
+                    ></ion-icon>
+
+                    Copiar
+                  </button>
+
+                  @if (
+                    qrScanner.result()!
+                      .contentType === 'url'
+                  ) {
+                    <button
+                      type="button"
+                      (click)="openQr()"
+                    >
+                      <ion-icon
+                        aria-hidden="true"
+                        name="open-outline"
+                      ></ion-icon>
+
+                      Abrir
+                    </button>
+                  }
+
+                  @if (
+                    qrScanner.result()!
+                      .contentType ===
+                    'smart-travel-place'
+                  ) {
+                    <button
+                      type="button"
+                      (click)="
+                        openSmartTravelPlace()
+                      "
+                    >
+                      <ion-icon
+                        aria-hidden="true"
+                        name="map-outline"
+                      ></ion-icon>
+
+                      Ver destino
+                    </button>
+                  }
+
+                  <button
+                    type="button"
+                    class="danger-action"
+                    (click)="clearQr()"
+                  >
+                    <ion-icon
+                      aria-hidden="true"
+                      name="close-outline"
+                    ></ion-icon>
+
+                    Limpiar
+                  </button>
+                </div>
+              </section>
+            }
+
+            @if (
+              qrScanner.history().length > 0
+            ) {
+              <section class="qr-history">
+                <div class="qr-history-heading">
+                  <div>
+                    <span>Historial local</span>
+                    <h3>Últimos escaneos</h3>
+                  </div>
+
+                  <button
+                    type="button"
+                    (click)="clearQrHistory()"
+                  >
+                    Borrar
+                  </button>
+                </div>
+
+                <div class="qr-history-list">
+                  <button
+                    *ngFor="
+                      let historyItem of
+                        qrScanner.history()
+                    "
+                    type="button"
+                    class="qr-history-item"
+                    (click)="
+                      selectQrHistory(
+                        historyItem
+                      )
+                    "
+                  >
+                    <span class="history-icon">
+                      <ion-icon
+                        aria-hidden="true"
+                        [name]="
+                          historyItem
+                            .contentType ===
+                          'smart-travel-place'
+                            ? 'location-outline'
+                            : historyItem
+                                  .contentType ===
+                                'url'
+                              ? 'link-outline'
+                              : 'document-text-outline'
+                        "
+                      ></ion-icon>
+                    </span>
+
+                    <div>
+                      <strong>
+                        {{
+                          historyItem
+                            .contentType ===
+                          'smart-travel-place'
+                            ? 'Destino Smart Travel'
+                            : historyItem
+                                  .contentType ===
+                                'url'
+                              ? 'Enlace web'
+                              : 'Código de texto'
+                        }}
+                      </strong>
+
+                      <small>
+                        {{ historyItem.value }}
+                      </small>
+                    </div>
+
+                    <ion-icon
+                      aria-hidden="true"
+                      name="chevron-forward-outline"
+                    ></ion-icon>
+                  </button>
+                </div>
+              </section>
+            }
+
           </div>
-        } @else {
+        }
+
+        <!-- Audioguía -->
+        @else if (selectedTool.id === 'audio') {
           <div class="detail-note">
             <ion-icon
               aria-hidden="true"
-              name="construct-outline"
+              name="headset-outline"
             ></ion-icon>
 
             <span>
-              Esta herramienta se conectará con su integración nativa
-              correspondiente durante la siguiente fase.
+              Utiliza el reproductor disponible
+              en la pantalla de Herramientas para
+              escuchar la audioguía turística.
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="detail-action"
+            (click)="closeToolDetails()"
+          >
+            Ir al reproductor
+          </button>
+        }
+
+        <!-- Bluetooth y NFC -->
+        @else {
+          <div class="detail-note">
+            <ion-icon
+              aria-hidden="true"
+              name="information-circle-outline"
+            ></ion-icon>
+
+            <span>
+              Esta función es compatible con
+              dispositivos que dispongan del
+              hardware correspondiente. Su uso
+              depende del sistema operativo y de
+              los permisos concedidos.
             </span>
           </div>
 
@@ -387,6 +976,7 @@
             Entendido
           </button>
         }
+
       </article>
     </section>
 

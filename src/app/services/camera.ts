@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+
 import {
   Camera,
   CameraDirection,
@@ -11,6 +12,7 @@ export interface CapturedTravelPhoto {
   webPath: string;
   format: string;
   capturedAt: string;
+  source: 'camera' | 'gallery';
 }
 
 @Injectable({
@@ -28,6 +30,32 @@ export class CameraService {
   readonly error = this.errorState.asReadonly();
 
   async capturePhoto(): Promise<CapturedTravelPhoto | null> {
+    return this.getPhoto(
+      CameraSource.Camera,
+      'camera'
+    );
+  }
+
+  async selectPhoto(): Promise<CapturedTravelPhoto | null> {
+    return this.getPhoto(
+      CameraSource.Photos,
+      'gallery'
+    );
+  }
+
+  removePhoto(): void {
+    this.photoState.set(null);
+    this.errorState.set('');
+  }
+
+  clearError(): void {
+    this.errorState.set('');
+  }
+
+  private async getPhoto(
+    source: CameraSource,
+    photoSource: 'camera' | 'gallery'
+  ): Promise<CapturedTravelPhoto | null> {
     if (this.loadingState()) {
       return null;
     }
@@ -41,7 +69,7 @@ export class CameraService {
         allowEditing: false,
         correctOrientation: true,
         saveToGallery: false,
-        source: CameraSource.Camera,
+        source,
         direction: CameraDirection.Rear,
         resultType: CameraResultType.Uri,
         webUseInput: true,
@@ -49,7 +77,7 @@ export class CameraService {
 
       if (!result.webPath) {
         throw new Error(
-          'La cámara no devolvió una imagen válida.'
+          'No se recibió una imagen válida.'
         );
       }
 
@@ -57,6 +85,7 @@ export class CameraService {
         webPath: result.webPath,
         format: result.format || 'jpeg',
         capturedAt: new Date().toISOString(),
+        source: photoSource,
       };
 
       this.photoState.set(photo);
@@ -67,12 +96,14 @@ export class CameraService {
 
       if (!this.isCancellation(message)) {
         console.error(
-          'No fue posible utilizar la cámara:',
+          'No fue posible obtener la imagen:',
           error
         );
 
         this.errorState.set(
-          'No fue posible capturar la fotografía.'
+          source === CameraSource.Camera
+            ? 'No fue posible abrir la cámara. Revisa el permiso concedido.'
+            : 'No fue posible seleccionar la imagen.'
         );
       }
 
@@ -80,15 +111,6 @@ export class CameraService {
     } finally {
       this.loadingState.set(false);
     }
-  }
-
-  removePhoto(): void {
-    this.photoState.set(null);
-    this.errorState.set('');
-  }
-
-  clearError(): void {
-    this.errorState.set('');
   }
 
   private getErrorMessage(error: unknown): string {
@@ -108,12 +130,13 @@ export class CameraService {
   }
 
   private isCancellation(message: string): boolean {
-    const normalizedMessage = message.toLowerCase();
+    const normalizedMessage =
+      message.toLowerCase();
 
     return (
       normalizedMessage.includes('cancel') ||
-      normalizedMessage.includes('canceled') ||
-      normalizedMessage.includes('cancelled')
+      normalizedMessage.includes('cancelled') ||
+      normalizedMessage.includes('canceled')
     );
   }
 }

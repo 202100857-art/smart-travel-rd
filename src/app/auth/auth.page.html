@@ -1,0 +1,334 @@
+<ion-content [fullscreen]="true">
+  <main class="auth-page">
+
+    <section class="auth-hero">
+      <div class="auth-decoration decoration-one"></div>
+      <div class="auth-decoration decoration-two"></div>
+
+      <div class="brand-icon">
+        <ion-icon
+          aria-hidden="true"
+          name="airplane-outline"
+        ></ion-icon>
+      </div>
+
+      <span class="brand-label">
+        Smart Travel RD
+      </span>
+
+      <h1>
+        Descubre República Dominicana
+      </h1>
+
+      <p>
+        Explora destinos, guarda tus lugares favoritos
+        y utiliza herramientas inteligentes durante
+        tu viaje.
+      </p>
+
+      <div class="destination-symbols">
+        <span>🏝️</span>
+        <span>🏛️</span>
+        <span>🌴</span>
+      </div>
+    </section>
+
+    <section class="auth-card">
+
+      <div class="auth-tabs">
+        <button
+          type="button"
+          [class.active]="mode === 'login'"
+          (click)="setMode('login')"
+        >
+          Iniciar sesión
+        </button>
+
+        <button
+          type="button"
+          [class.active]="mode === 'register'"
+          (click)="setMode('register')"
+        >
+          Crear cuenta
+        </button>
+      </div>
+
+      <div class="form-heading">
+        <span>
+          {{
+            mode === 'login'
+              ? 'Bienvenido nuevamente'
+              : 'Comienza tu aventura'
+          }}
+        </span>
+
+        <h2>
+          {{
+            mode === 'login'
+              ? 'Accede a tu cuenta'
+              : 'Regístrate en Smart Travel RD'
+          }}
+        </h2>
+
+        <p>
+          {{
+            mode === 'login'
+              ? 'Ingresa tus datos para continuar.'
+              : 'Completa el formulario para crear tu cuenta.'
+          }}
+        </p>
+      </div>
+
+      <form
+        class="auth-form"
+        (ngSubmit)="submit()"
+      >
+        @if (mode === 'register') {
+          <label class="form-field">
+            <span>Nombre completo</span>
+
+            <div class="input-wrapper">
+              <ion-icon
+                aria-hidden="true"
+                name="person-outline"
+              ></ion-icon>
+
+              <input
+                type="text"
+                name="name"
+                [(ngModel)]="name"
+                autocomplete="name"
+                placeholder="Ej. Luis Marte"
+              />
+            </div>
+          </label>
+        }
+
+        <label class="form-field">
+          <span>Correo electrónico</span>
+
+          <div class="input-wrapper">
+            <ion-icon
+              aria-hidden="true"
+              name="mail-outline"
+            ></ion-icon>
+
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              autocomplete="email"
+              placeholder="correo@ejemplo.com"
+            />
+          </div>
+        </label>
+
+        <label class="form-field">
+          <span>Contraseña</span>
+
+          <div class="input-wrapper">
+            <ion-icon
+              aria-hidden="true"
+              name="lock-closed-outline"
+            ></ion-icon>
+
+            <input
+              [type]="
+                showPassword
+                  ? 'text'
+                  : 'password'
+              "
+              name="password"
+              [(ngModel)]="password"
+              [autocomplete]="
+                mode === 'login'
+                  ? 'current-password'
+                  : 'new-password'
+              "
+              placeholder="Mínimo 6 caracteres"
+            />
+
+            <button
+              type="button"
+              class="password-button"
+              [attr.aria-label]="
+                showPassword
+                  ? 'Ocultar contraseña'
+                  : 'Mostrar contraseña'
+              "
+              (click)="togglePassword()"
+            >
+              <ion-icon
+                aria-hidden="true"
+                [name]="
+                  showPassword
+                    ? 'eye-off-outline'
+                    : 'eye-outline'
+                "
+              ></ion-icon>
+            </button>
+          </div>
+        </label>
+
+        @if (mode === 'register') {
+          <label class="form-field">
+            <span>Confirmar contraseña</span>
+
+            <div class="input-wrapper">
+              <ion-icon
+                aria-hidden="true"
+                name="lock-closed-outline"
+              ></ion-icon>
+
+              <input
+                [type]="
+                  showConfirmPassword
+                    ? 'text'
+                    : 'password'
+                "
+                name="confirmPassword"
+                [(ngModel)]="confirmPassword"
+                autocomplete="new-password"
+                placeholder="Repite tu contraseña"
+              />
+
+              <button
+                type="button"
+                class="password-button"
+                [attr.aria-label]="
+                  showConfirmPassword
+                    ? 'Ocultar contraseña'
+                    : 'Mostrar contraseña'
+                "
+                (click)="toggleConfirmPassword()"
+              >
+                <ion-icon
+                  aria-hidden="true"
+                  [name]="
+                    showConfirmPassword
+                      ? 'eye-off-outline'
+                      : 'eye-outline'
+                  "
+                ></ion-icon>
+              </button>
+            </div>
+          </label>
+        }
+
+        @if (formError || authService.error()) {
+          <div class="auth-message error-message">
+            <ion-icon
+              aria-hidden="true"
+              name="alert-circle-outline"
+            ></ion-icon>
+
+            <span>
+              {{ formError || authService.error() }}
+            </span>
+          </div>
+        }
+
+        @if (successMessage) {
+          <div class="auth-message success-message">
+            <ion-icon
+              aria-hidden="true"
+              name="checkmark-circle"
+            ></ion-icon>
+
+            <span>{{ successMessage }}</span>
+          </div>
+        }
+
+        <button
+          type="submit"
+          class="submit-button"
+          [disabled]="authService.loading()"
+        >
+          @if (authService.loading()) {
+            <ion-spinner
+              name="crescent"
+            ></ion-spinner>
+
+            <span>Procesando...</span>
+          } @else {
+            <ion-icon
+              aria-hidden="true"
+              [name]="
+                mode === 'login'
+                  ? 'log-in-outline'
+                  : 'person-add-outline'
+              "
+            ></ion-icon>
+
+            <span>
+              {{
+                mode === 'login'
+                  ? 'Iniciar sesión'
+                  : 'Crear cuenta'
+              }}
+            </span>
+          }
+        </button>
+      </form>
+
+      <div class="auth-separator">
+        <span></span>
+        <small>o continúa con</small>
+        <span></span>
+      </div>
+
+      <button
+        type="button"
+        class="google-button"
+        [disabled]="authService.loading()"
+        (click)="loginWithGoogle()"
+      >
+        <ion-icon
+          aria-hidden="true"
+          name="logo-google"
+        ></ion-icon>
+
+        Continuar con Google
+      </button>
+
+      <p class="switch-message">
+        {{
+          mode === 'login'
+            ? '¿Todavía no tienes una cuenta?'
+            : '¿Ya tienes una cuenta?'
+        }}
+
+        <button
+          type="button"
+          (click)="
+            setMode(
+              mode === 'login'
+                ? 'register'
+                : 'login'
+            )
+          "
+        >
+          {{
+            mode === 'login'
+              ? 'Regístrate'
+              : 'Inicia sesión'
+          }}
+        </button>
+      </p>
+
+    </section>
+
+    <footer class="auth-footer">
+      <ion-icon
+        aria-hidden="true"
+        name="shield-checkmark-outline"
+      ></ion-icon>
+
+      <span>
+        Tu acceso está protegido con Firebase
+        Authentication.
+      </span>
+    </footer>
+
+  </main>
+</ion-content>
