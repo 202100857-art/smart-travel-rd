@@ -223,7 +223,7 @@ La aplicación integra diferentes capacidades del dispositivo móvil:
 Clonar el proyecto:
 
 ```bash
-git clone https://github.com/TU_USUARIO/smart-travel-rd.git
+git clone https://github.com/202100857-art/smart-travel-rd.git
 ```
 
 Entrar al proyecto:
