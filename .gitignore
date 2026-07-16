@@ -70,7 +70,33 @@ testem.log
 Thumbs.db
 
 
-#android
+# Firebase Android
 android/app/google-services.json
+
+# Firmas Android
 *.jks
 *.keystore
+*.p12
+*.pem
+
+# Variables y credenciales
+.env
+.env.*
+!.env.example
+service-account*.json
+*service-account*.json
+
+# Ngrok
+ngrok.yml
+.ngrok2/
+
+# Compilaciones
+android/app/build/
+android/.gradle/
+*.apk
+*.aab
+
+# Dependencias y archivos generados
+node_modules/
+www/
+dist/
